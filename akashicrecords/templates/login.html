@@ -1,0 +1,49 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="/static/css/styleLogin.css"rel="stylesheet">
+
+</head>
+<body>
+   <div class="logo">
+        <img src="/static/images/Logo AKS Shadows.png" height="70px">
+   </div>
+   <div class="center">
+    <div class="caixaRegister">
+        <form method="post">
+            {% csrf_token %}
+            <h1>Login</h1>
+            <div class="inputBox">
+                <input type="text"  placeholder="Username" id="placeholder", name="username">
+                <span>Username</span>
+                <i></i>
+            </div>
+            <div class="inputBox">
+                <input type="password"  placeholder="Senha" id="placeholder", name="password">
+                <span>Senha</span>
+                <i></i>
+            </div>
+          <div class="DoisBotoes">
+            <div>
+           <a href="/"><input type="button" id="Botao" value="Voltar"></input></a>
+            </div>
+            <div>
+
+              <a href="/registrar/"><input type="button" value="Não tenho conta!" id="Botao"></input></a>
+            </div>
+          </div>
+            <div class="botaoRegister">
+                <input type="submit" value="Login">
+            </div>
+        </form>
+    </div>
+   </div>
+   
+</body>
+</html>

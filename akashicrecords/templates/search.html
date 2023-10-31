@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+  <link href="../static/css/style.css"rel="stylesheet">
+</head>
+<body >
+  {% if movie_data %}
+      <h1 style="margin-bottom:8px">{{ movie_data.Title }}</h1>
+      <p style="margin-bottom:5px">Year: {{ movie_data.Year }}</p>
+      <p style="margin-bottom:5px">Director: {{ movie_data.Director }}</p>
+      <p style="margin-bottom:5px">Plot: {{ movie_data.Plot }}</p>
+      <p style="margin-bottom:5px">Release Data: {{ movie_data.Released }}</p>
+      <p style="margin-bottom:5px">Age Rating: {{ movie_data.Rated }}</p>
+      <p style="margin-bottom:5px">Runtime: {{ movie_data.Runtime }}</p>
+      <p style="margin-bottom:5px">Main Cast: {{ movie_data.Actors }}</p>
+      <p style="margin-bottom:5px">Genre: {{ movie_data.Genre }}</p>
+      <p style="margin-bottom:5px">Rotten Tomatoes Rating: {{ movie_data.Ratings.1.Value }}</p>
+  {% else %}
+      <p>No movie data found.</p>
+  {% endif %}
+</body>
+</html>

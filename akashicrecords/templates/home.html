@@ -1,0 +1,93 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akashic Records</title>
+    <link href="../static/css/style.css"rel="stylesheet">
+</head>
+  
+<body>
+  <header>
+    <div class="navbar">
+      <div class="navbarRight">
+          <a href=""> <img src="/static/images/Logo AKS Shadows.png" height="80px", width="80px" id="logo"></a>
+        
+        <form method="post" action="/search/">
+            {% csrf_token %}
+            <input type="search" placeholder="Pesquise Aqui" id="PesquiseAqui" name="search">
+            <button id="Botao" type="submit" style="padding-top: 5px; padding-bottom: 7px;">Search</button>
+        </form>
+      </div>    
+      <div class="navbarLeft">
+          <ul id="ListaButoes">
+              <a href="/"><span><li id="ItensListaButoes">Home</li></span></a>
+              <a href="" ><li id="ItensListaButoes">Filmes</li></a>
+              <a href=""><li id="ItensListaButoes">Musicas</li></a>
+          </ul>
+        <div class="Login">
+            {% if request.user.is_authenticated %}
+                <a href="logout/"><button id="Botao" style="width: 100px;">Logout</button></a>
+            {% else %}
+                <a href="login/"><button id="Botao" style="width: 100px;">Login</button></a>
+                <a href="/registrar/"><button id="Botao">Registre-se</button></a>
+            {% endif %}
+        </div>
+    </div>
+    </div>
+
+  </header>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const selectField = document.querySelector('#GenreSelect');
+      const link = document.querySelector('#genreLink');
+
+      selectField.addEventListener('change', function() {
+        const selectedValue = selectField.value;
+        link.href = `/recommend/?genre=${selectedValue}`;
+      });
+    });
+  </script>
+  
+  <div class="main">
+    {% if request.user.is_authenticated %}
+    <!-- <h1 id="h1main"> Você está logado!!!</h1> -->
+    
+    <h1 id="h1main">Bem Vindo <span style="color:#A5D7E8 ;">{{request.user.username}}</span> !</h1>
+
+    <h1 id="h1main">Por favor, selecione um gênero de filme para obter uma recomendação:</h1><br>
+    <select name="genre" id="GenreSelect">
+      <option value="">Selecionar...</option>
+      <option value="Action">Ação</option>
+      <option value="Adventure">Aventura</option>
+      <option value="Comedy">Comédia</option>
+      <option value="Dance">Dance</option>
+      <option value="Documentary">Documentário</option>
+      <option value="Drama">Drama</option>
+      <option value="Farwest">Faroeste</option>
+      <option value="Fantasy">Fantasia</option>
+      <option value="Sci-fi">Ficção Científica</option>
+      <option value="War">Guerra</option>
+      <option value="Mistery">Mistério</option>
+      <option value="Musical">Musical</option>
+      <option value="Police">Policial</option>
+      <option value="Romance">Romance</option>
+      <option value="Thriller">Suspense</option>
+      <option value="Horror">Terror</option>
+    </select>
+
+    O gênero escolhido foi: {{ genre }}
+    <a id='genreLink' href="/recommend/?genre={{ genre }}">
+      <button id="Botao">Recomendar</button>
+    </a>
+    
+    {% else %}
+    <h1 id="h1main"> Você <span style="color:#A5D7E8;">não</span> está logado!!!</h1>
+    {% endif %}
+ </div>
+  
+</body>
+</html>

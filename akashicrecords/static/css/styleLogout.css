@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins');
+/* Paleta de cores:
+
+- #0B2447
+- #19376D
+- #576CBC
+- #A5D7E8
+
+  Fonte: Poppins
+*/
+
+*{
+    margin: 0;
+    padding: 0px;
+    box-sizing: border-box;
+    font-family: Poppins;
+    color: white;
+}
+
+body{
+    background-color: #313866   ;
+}
+
+
+.logo{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin-top: 40px;
+    margin-bottom: 60px;
+}
+.center{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+.caixaRegister{
+    display: flex;
+    justify-content: center;
+    width: 400px;
+    height: 370px;
+    border: 8px solid #0B2447;
+    border-radius: 25px;
+    animation: pulse 5s infinite;
+
+}
+.caixaRegister h1{
+    margin-top: 50px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 45px;
+}
+
+@keyframes pulse {
+    0% {
+        border-color: #18417a;
+    }
+    25% {
+        border-color: #576CBC; 
+    }
+    50% {
+        border-color: #A5D7E8;
+    }
+    75% {
+        border-color: #576CBC; 
+    }
+    100% {
+        border-color: #18417a;
+    }
+}
+
+
+.DoisBotoes{
+  display:flex;
+  justify-content:space-evenly;
+  flex-direction: column;
+}
+
+#BotaoSimNao{
+    width: 140px;
+    margin-top: 20px;
+    padding: 10px;
+    border: 3px solid  #576CBC;
+    border-radius: 25px;
+    background-color: transparent;
+    font-size: 25px;
+    cursor: pointer;
+    transition: transform 0.3s, color 0.12s;
+    
+}
+#BotaoSimNao:hover{
+    transform: scale(0.94);
+    background-color: rgba(165, 215, 232, 0.2);
+
+}

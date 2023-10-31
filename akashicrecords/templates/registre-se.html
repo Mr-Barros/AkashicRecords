@@ -1,0 +1,59 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar</title>
+    <link href="/static/css/styleRegistre-se.css"rel="stylesheet">
+
+</head>
+<body>
+   <div class="logo">
+        <img src="/static/images/Logo AKS Shadows.png" height="70px">
+   </div>
+   <div class="center">
+    <div class="caixaRegister">
+        <form method="post">
+            {% csrf_token %}
+            <h1>Registre-se!</h1>
+            
+            <div class="inputBox">
+                <input type="email" required="required" placeholder="Email" id="placeholder", name="email">
+                <span>Email</span>
+            </div>
+          <div class="inputBox">
+                <input type="text" required="required" placeholder="Username" id="placeholder", name="username">
+                <span>Username</span>
+            </div>
+            <div class="inputBox">
+                <input type="password" required="required" placeholder="Senha" id="placeholder", name="password">
+                <span>Senha</span>
+            </div>
+
+            <div class="termos">
+                <input type="checkbox" required="required" > 
+                <h6>Aceito os Termos de Serviço e Privacidade</h6>
+
+            </div>
+           <div class="DoisBotoes">
+            <div>
+           <a href="/"><input type="button" id="Botao" value="Voltar"></input></a>
+            </div>
+            <div>
+
+              <a href="/login/"><input type="button" value="Já tenho conta!" id="Botao"></input></a>
+            </div>
+          </div>
+            <div class="botaoRegister">
+                <input type="submit" value="Registrar">
+            </div>
+         
+        </form>
+    </div>
+   </div>
+   
+</body>
+</html>

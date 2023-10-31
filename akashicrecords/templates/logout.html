@@ -1,0 +1,39 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="/static/css/styleLogout.css"rel="stylesheet">
+
+</head>
+<body>
+   <div class="logo">
+        <img src="/static/images/Logo AKS Shadows.png" height="70px">
+   </div>
+   <div class="center">
+    <div class="caixaRegister">
+        <form method="post">
+            {% csrf_token %}
+            <h1>Logout</h1>
+          <div class="DoisBotoes">
+            <div>
+                <form method="post" >
+                    {% csrf_token %}
+                    <input type="submit" name="Sim" value="Sim" id="BotaoSimNao">
+                </form>
+            </div>
+            <div>
+                <a href="/"><input type="submit" id="BotaoSimNao" value="Não"></a>
+            </div>
+       </div>
+
+        </form>
+    </div>
+   </div>
+   
+</body>
+</html>
