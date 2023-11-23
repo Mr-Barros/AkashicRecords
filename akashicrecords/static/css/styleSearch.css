@@ -1,0 +1,357 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins');
+
+/* Paleta de cores:
+
+- #0B2447
+- #19376D
+- #576CBC
+- #A5D7E8
+
+  Fonte: Poppins
+*/
+
+*{
+    margin: 0;
+    padding: 0px;
+    box-sizing: border-box;
+    font-family: Poppins;
+    color: white;
+}
+
+body{
+    background-color: #313866   ;
+}
+header{
+    background-color: #2d325b;
+}
+
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;    
+    padding: 0 34px;
+    box-shadow: 0px 15px 15px -3px rgba(0,0,0,0.2);
+
+}
+
+.navbarRight{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#logo{
+  padding:4px;
+  padding-top:8px;
+}
+
+#logo:hover{
+  animation: logo-animation1 0.5s, logo-animation3 1s 0.5s, logo-animation2 0.5s 1.5s;
+  width:80px;
+}
+
+
+@keyframes logo-animation1 {
+  0%{
+    content: url('/static/images/animation/livro00.png');
+    width:80px;
+
+  }
+  10% {
+    content: url('/static/images/animation/livro01.png');
+    width:80px;
+  }
+  20% {
+    content: url('/static/images/animation/livro02.png');
+    width:80px;
+  }
+  30% {
+    content: url('/static/images/animation/livro03.png');
+    width:80px;
+  }
+  40% {
+    content: url('/static/images/animation/livro04.png');
+    width:80px;
+  }
+  50% {
+    content: url('/static/images/animation/livro05.png');
+    width:80px;
+    animation-timing-function: steps(1);
+  }
+  60% {
+    content: url('/static/images/animation/livro06.png');
+    width:80px;
+  }
+  70% {
+    content: url('/static/images/animation/livro07.png');
+    width:80px;
+  }
+  80% {
+    content: url('/static/images/animation/livro08.png');
+    width:80px;
+  }
+  90% {
+    content: url('/static/images/animation/livro09.png');
+    width:80px;
+  }
+  100% {
+    animation-delay:2s;
+    content: url('/static/images/animation/livro09.png');
+    width:80px;
+  }
+
+}
+@keyframes logo-animation2 {
+  0%,10% {
+    content: url('/static/images/animation/livro09.png');
+    width:80px;
+  }
+  20% {
+    content: url('/static/images/animation/livro08.png');
+    width:80px;
+  }  
+  30% {
+    content: url('/static/images/animation/livro07.png');
+    width:80px;
+}
+  40% {
+    content: url('/static/images/animation/livro06.png');
+    width:80px;
+  }
+  50% {
+    content: url('/static/images/animation/livro05.png');
+    width:80px;
+  }
+  60% {
+    content: url('/static/images/animation/livro04.png');
+    width:80px;
+  }
+  70% {
+    content: url('/static/images/animation/livro03.png');
+    width:80px;
+  }
+  80% {
+    content: url('/static/images/animation/livro02.png');
+    width:80px;
+  }
+  90% {
+    content: url('/static/images/animation/livro01.png');
+    width:80px;
+  }
+  100%{
+    content: url('/static/images/animation/livro00.png');
+    width:80px;
+  }
+}
+@keyframes logo-animation3 {
+  0% {
+    content: url('/static/images/animation/livro09.png');
+    width: 80px;
+  }
+  100% {
+    content: url('/static/images/animation/livro09.png');
+    width: 80px;
+  }
+}
+
+.navbarLeft{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#ListaButoes{
+    display: flex;
+    justify-content: space-evenly;
+    list-style: none;
+
+}
+#ListaButoes a{
+    text-decoration: none;
+}
+#ItensListaButoes{
+    margin: 10px;
+    padding: 15px;
+    transition: transform 0.12s, color 0.12s;
+}
+
+#ListaButoes li:hover{
+    transform: scale(1.1);
+    color:#576CBC ; 
+
+}
+#Botao{
+    margin: 7px;
+    padding: 10px;
+    border: 3px solid  #576CBC;
+    border-radius: 25px;
+    background-color: transparent;
+    font-size: 17px;
+    cursor: pointer;
+    transition: transform 0.3s, color 0.12s;
+}
+#BotaoContent{
+  margin: 7px;
+  padding: 10px;
+  border: 3px solid  #576CBC;
+  border-radius: 25px;
+  background-color: transparent;
+  font-size: 25px;
+  cursor: pointer;
+  transition: transform 0.3s, color 0.12s;
+}
+#BotaoContent:hover{
+  transform: scale(0.94);
+  background-color: rgba(165, 215, 232, 0.2);
+}
+#Botao:hover{
+    transform: scale(0.94);
+    background-color: rgba(165, 215, 232, 0.2);
+
+}
+#PesquiseAqui{
+  margin-left: 3vw;
+  background-color: #0B2447;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  border-radius: 25px;
+  padding: 10px 10px 10px 20px;
+  width: min(35vw, 500px);
+}
+#PesquiseAqui::placeholder{
+    color: white;
+    opacity:30%;
+}
+
+.MainBoard{
+  display:flex;
+  flex-direction: column;
+  margin:60px 40px 40px 40px;
+  border-radius: 30px;
+  background-color: #2d325b;
+}
+
+.MainBoardTop{
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  margin:0px 20px 20px 20px;
+  align-items: center;
+}
+
+.Title{
+  font-size:25px;
+}
+
+.Voltar{
+  display:flex;
+  flex-direction: row;
+  justify-content: start;
+  margin:20px 20px 0px 20px;
+  align-items: center;
+}
+
+.MainBoardContent{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin:20px;
+  align-items: center;
+}
+
+.Content{
+  width:70%;
+  font-size:20px
+
+}
+
+.Poster{
+  margin-left:80px;
+}
+
+.profile-pic-nav-container{
+  display: flex; 
+  justify-content: center; 
+  align-content: center; 
+  width: 55px;
+  aspect-ratio: 1/1;
+  padding-left: 10px;
+}
+
+.profile-pic-nav{
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s;
+  border: 4px solid #576CBC;
+  width: 55px;
+  height: 55px;
+}
+
+.profile-pic-nav:hover{
+  transform: scale(0.94);
+  border-color: #A5D7E8
+}
+
+.container{
+  width: min(90%, 1140px);
+  margin: 3rem auto;
+}
+
+.comment_container{
+  position: relative;
+}
+
+.comment_container::before{
+  content: "";
+  position: absolute;
+  background: white;
+  min-height: 100%;
+  width: 1px;
+  left: -10px;
+}
+
+
+.comment_card{
+  padding: 20px;
+  background: #576CBC;
+  border: 1px solid rgba(0,0,0,0.3);
+  border-radius: .5rem;
+  min-width: 100%;
+  box-shadow: 0 0 50px rba(0,0,0,0.2);
+}
+
+.comment_card-footer{
+  display: flex;
+  font-size: .85rem;
+  opacity: .6;
+  gap: 30px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.likes, .dislikes{
+  cursor: pointer;
+}
+
+#com{
+  background-color: #19376D;
+  border-radius: .5rem;
+}
+
+.OndeAssitir{
+  display:flex;
+  align-items:center;
+  flex-direction:row;
+  margin-left:420px;
+  
+}
+
+
+#barra{
+  border: 4px solid #A5D7E8;
+  border-radius:10px;
+  margin: 0px 10px 0px 10px;
+  padding:12px;
+}

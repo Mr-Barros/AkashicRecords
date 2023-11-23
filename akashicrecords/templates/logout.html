@@ -23,11 +23,11 @@
             <div>
                 <form method="post" >
                     {% csrf_token %}
-                    <input type="submit" name="Sim" value="Sim" id="BotaoSimNao">
+                    <input type="submit" name="Sim" value="Yes" id="BotaoSimNao">
                 </form>
             </div>
             <div>
-                <a href="/"><input type="submit" id="BotaoSimNao" value="Não"></a>
+                <a href="/"><input type="submit" id="BotaoSimNao" value="No" onclick="history.back()"></a>
             </div>
        </div>
 

@@ -135,3 +135,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL =  "/login/"
 
 OMDB_API_KEY = "19b9fd3d"
+TMDB_API_KEY = 'd2ecbe475e3b1b457f27e333b6e77e6a'

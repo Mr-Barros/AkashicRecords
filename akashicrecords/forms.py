@@ -1,12 +1,27 @@
-from django.forms import ModelForm
-from .models import Movie
+from django.contrib.auth.models import User
+from .models import Movie, Profile
 from django import forms
 
-class MovieForm(ModelForm):
-    class Meta:
-        model = Movie
-        fields = '__all__'
+# class MovieForm(ModelForm):
+#     class Meta:
+#         model = Movie
+#         fields = '__all__'
 
 
 class MovieSearchForm(forms.Form):
   q = forms.CharField(label='Search for a movie', max_length=100)
+
+class UserUpdateForm(forms.ModelForm):
+  email = forms.EmailField()
+
+  class Meta:
+    model = User
+    fields = ['username', 'email']
+
+class ProfileUpdateForm(forms.ModelForm):
+  class Meta:
+    model = Profile
+    fields = ['bio' ,'image']
+    
+# class Recommendation(forms.ModelForm):
+  

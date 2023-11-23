@@ -1,0 +1,74 @@
+{% load static %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+  <header>
+    <div class="navbar">
+      <div class="navbarRight">
+          <a href="/"> <img src="/static/images/Logo AKS Shadows.png" height="80px", width="80px" id="logo"></a>
+
+        <form method="post" action="/search/">
+            {% csrf_token %}
+            <input type="search" placeholder="Pesquise Aqui" id="PesquiseAqui" name="search">
+            <button id="Botao" type="submit" style="padding-top: 5px; padding-bottom: 7px;">Search</button>
+        </form>
+      </div>    
+      <div class="navbarLeft">
+        <ul id="ListaButoes">
+            <a href="/"><span><li id="ItensListaButoes">Home</li></span></a>
+            <a href="" ><li id="ItensListaButoes">Movies</li></a>
+        </ul>
+        <div class="Login">
+          {% if request.user.is_authenticated %}
+              <a href="/logout/"><button id="Botao" style="width: 100px;">Logout</button></a>
+          {% else %}
+              <a href="/login/"><button id="Botao" style="width: 100px;">Login</button></a>
+              <a href="/registrar/"><button id="Botao">Register</button></a>
+          {% endif %}
+        </div>
+      </div>  
+    </div>
+  </header>
+
+  <div class="profile-info-container">
+    <div class="profile-info-box">
+      <div class="profile-info">
+        <img src="{{ request.user.profile.image.url }}" class="profile-pic">
+        <div class="profile-info-txt" style="margin-left: 25px;" >
+          <h1 style="font-size: 300%; padding-top: 25px;" >{{ request.user.username }}</h1>
+          {% if request.user.profile.bio %}
+            <p>{{ request.user.profile.bio }}</p>
+          {% else %}
+            <p>You don't have a bio yet :(</p>
+          {% endif %}
+        </div>
+      </div>
+      <a href="update_profile"><button id="BotaoEdit">Edit</button></a>
+    </div>
+  </div>
+
+  <div class="profile-assistidos-container">
+    <div class="profile-assistidos-content">
+      {% if movie %}
+        <p>You don't have any watched movies.</p>
+      {% else %}
+        {% for movie in movies %}
+          <div class="profile-assistidos"><img src={{ movie.poster }} ></div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+  
+</body>
+</html>

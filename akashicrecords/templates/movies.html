@@ -1,0 +1,135 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akashic Records</title>
+    <link href="../static/css/styleMovies.css"rel="stylesheet">
+</head>
+
+<body>
+  <header>
+    <div class="navbar">
+      <div class="navbarRight">
+          <a href="/"> <img src="/static/images/Logo AKS Shadows.png" height="80px", width="80px" id="logo"></a>
+
+        <form method="post" action="/search/">
+            {% csrf_token %}
+            <input type="search" placeholder="Pesquise Aqui" id="PesquiseAqui" name="search">
+            <button id="Botao" type="submit" style="padding-top: 5px; padding-bottom: 7px;">Search</button>
+        </form>
+      </div>    
+      <div class="navbarLeft">
+        <ul id="ListaButoes">
+            <a href="/"><span><li id="ItensListaButoes">Home</li></span></a>
+            <a href="" ><li id="ItensListaButoes">Movies</li></a>
+        </ul>
+        <div class="Login">
+          {% if request.user.is_authenticated %}
+              <a href="/logout/"><button id="Botao" style="width: 100px;">Logout</button></a>
+          {% else %}
+              <a href="/login/"><button id="Botao" style="width: 100px;">Login</button></a>
+              <a href="/registrar/"><button id="Botao">Register</button></a>
+          {% endif %}
+        </div>
+        <div>
+          {% if request.user.is_authenticated %}
+            <a href="/profile/{{ request.user.username }}"><img src="{{ request.user.profile.image.url }}" class="profile-pic-nav"></a>
+          {% endif %}
+        </div>
+      </div>  
+    </div>
+  </header>
+
+  <div class="main">
+    {% if request.user.is_authenticated %}
+
+    <div class="selecaoGenero">
+      <h1>Go to:</h1>
+      <ul>
+        <a id="ListGenero"href="#Action"onclick="scrollToSection('Action')"><li>Action</li></a>
+        <a id="ListGenero"href="#Adventure" onclick="scrollToSection('Adventure')"><li>Adventure</li></a>
+        <a id="ListGenero"href="#Comedy" onclick="scrollToSection('Comedy')"><li>Comedy</li></a>
+        <a id="ListGenero"href="#Drama" onclick="scrollToSection('Drama')"><li>Drama</li></a>
+        <a id="ListGenero"href="#Horror" onclick="scrollToSection('Horror')"><li>Horror</li></a>
+        <a id="ListGenero"href="#Sci-fi" onclick="scrollToSection('Sci-fi')"><li>Sci-fi</li></a>
+        <a id="ListGenero"href="#Romance" onclick="scrollToSection('Romance')"><li>Romance</li></a>
+        <a id="ListGenero"href="#Documentary" onclick="scrollToSection('Documentary')"><li>Documentary</li></a>
+        <a id="ListGenero"href="#Music" onclick="scrollToSection('Music')"><li>Music</li></a>
+      </ul>
+    </div>
+    <div class="mainPage">
+      <div id="Popular">
+        <h2>Popular</h2>
+        <div class="listFilm">
+          {% for movie in popular_movies %}
+            <div class="poster">
+              <a href="/search?title={{ movie.title }}"><img style="height:180px; width:130px; border-radius:10px;" src="{{ movie.url }}" alt="{{ movie.title }} poster"></a>
+              <!-- <p>{{ movie.title }}</p> -->
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div id="TopRated">
+        <h2>Top Rated</h2>
+        <div class="listFilm">
+          {% for movie in top_rated_movies %}
+            <div class="poster">
+              <a href="/search?title={{ movie.title }}"><img style="height:180px; width:130px; border-radius:10px;" src="{{ movie.url }}" alt="{{ movie.title }} poster"></a>
+              <!-- <p>{{ movie.title }}</p> -->
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div id="Action">
+        <h2>Action</h2>
+      </div>
+      <div id="Adventure">
+        <h2>Adventure</h2>
+      </div>
+      <div id="Comedy">
+        <h2>Comedy</h2>
+      </div>
+      <div id="Drama">
+        <h2>Drama</h2>
+      </div>
+      <div id="Horror">
+        <h2>Horror</h2>
+      </div>
+      <div id="Sci-fi">
+        <h2>Sci-fi</h2>
+      </div>
+      <div id="Romance">
+        <h2>Romance</h2>
+      </div>
+      <div id="Documentary">
+        <h2>Documentary</h2>
+      </div>
+      <div id="Music">
+        <h2>Music</h2>
+      </div>
+      
+    </div>
+      {% else %}
+      <h1 id="h1main"> You're <span style="color:#A5D7E8;">not</span> logged on!!!</h1>
+      {% endif %}
+  </div>
+
+</body>
+</html>
+
+
+
+<script>
+  function scrollToSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({
+        behavior: 'smooth'
+      });
+    }
+  }
+</script>

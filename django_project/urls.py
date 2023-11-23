@@ -24,10 +24,16 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/',views.login_user, name="login"),
     path("registrar/",views.registrar_user),
-    path("recommend/", views.home),
+    path("recommend/", views.recommendation),
     path("logout/",views.logout_user, name="logout"),
     path("search/", views.search, name="search"),
-    path("teste/", views.teste, name="teste"),
+    path('movies/', views.movies, name='movies'),
+    path("profile/<str:username>/", views.profile_page, name="profile"),
+    path("profile/<str:username>/update_profile/", views.update_profile_page, name="udpdate_profile"),
+
+    path("import/", views.import_database),
+    #Url temporária para testes v
+    path("teste/", views.search, name="teste"),
 ]
 
 if settings.DEBUG:

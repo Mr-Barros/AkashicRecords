@@ -18,7 +18,7 @@
     <div class="caixaRegister">
         <form method="post">
             {% csrf_token %}
-            <h1>Registre-se!</h1>
+            <h1>Register!</h1>
             
             <div class="inputBox">
                 <input type="email" required="required" placeholder="Email" id="placeholder", name="email">
@@ -30,25 +30,25 @@
             </div>
             <div class="inputBox">
                 <input type="password" required="required" placeholder="Senha" id="placeholder", name="password">
-                <span>Senha</span>
+                <span>Password</span>
             </div>
 
             <div class="termos">
                 <input type="checkbox" required="required" > 
-                <h6>Aceito os Termos de Serviço e Privacidade</h6>
+                <h6>I accept the Privacy and Security Terms</h6>
 
             </div>
            <div class="DoisBotoes">
             <div>
-           <a href="/"><input type="button" id="Botao" value="Voltar"></input></a>
+           <a href="/"><input type="button" id="Botao" value="Back"></input></a>
             </div>
             <div>
 
-              <a href="/login/"><input type="button" value="Já tenho conta!" id="Botao"></input></a>
+              <a href="/login/"><input type="button" value="Login" id="Botao"></input></a>
             </div>
           </div>
             <div class="botaoRegister">
-                <input type="submit" value="Registrar">
+                <input type="submit" value="Register">
             </div>
          
         </form>

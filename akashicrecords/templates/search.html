@@ -1,11 +1,105 @@
+{% load static %}
+
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>Search Results</title>
-  <link href="../static/css/style.css"rel="stylesheet">
+  <link href="../static/css/styleSearch.css"rel="stylesheet">
 </head>
 <body >
+  <header>
+    <div class="navbar">
+      <div class="navbarRight">
+          <a href="/"> <img src="/static/images/Logo AKS Shadows.png" height="80px", width="80px" id="logo"></a>
+
+        <form method="post" action="/search/">
+            {% csrf_token %}
+            <input type="search" placeholder="Pesquise Aqui" id="PesquiseAqui" name="search">
+            <button id="Botao" type="submit" style="padding-top: 5px; padding-bottom: 7px;">Search</button>
+        </form>
+      </div>    
+      <div class="navbarLeft">
+        <ul id="ListaButoes">
+            <a href="/"><span><li id="ItensListaButoes">Home</li></span></a>
+            <a href="movies/" ><li id="ItensListaButoes">Movies</li></a>
+        </ul>
+        <div class="Login">
+          {% if request.user.is_authenticated %}
+              <a href="/logout/"><button id="Botao" style="width: 100px;">Logout</button></a>
+          {% else %}
+              <a href="/login/"><button id="Botao" style="width: 100px;">Login</button></a>
+              <a href="/registrar/"><button id="Botao">Register</button></a>
+          {% endif %}
+        </div>
+        <div class="profile-pic-nav-container">
+          {% if request.user.is_authenticated %}
+            <a href="/profile/{{ request.user.username }}"><img src="{{ request.user.profile.image.url }}" class="profile-pic-nav"></a>
+          {% endif %}
+        </div>
+      </div>  
+    </div>
+  </header>
+
+  <div class="MainBoard">
+    <div class="Voltar">
+      <a href="/"><input type="button" id="BotaoContent" value="Back"></input></a>
+    </div>
+    <div class="MainBoardTop">
+      <div class="Title">
+        {% if movie_data %}
+        <h1 style="margin-bottom:8px">{{ movie_data.Title }}</h1>
+      {% else %}
+          <p>No movie data found.</p>
+      {% endif %}
+      </div>
+    </div>
+    <div class="MainBoardContent">
+      <div class="Poster">
+       <!-- <img style="width:250px"src="/static/images/Poster Example.jpg"> -->
+       <img style="width:250px" src={{ movie_data.Poster }}>
+      </div>
+      <div class="Content">
+        {% if movie_data %}
+            <p style="margin-bottom:5px"><b>Year:</b> {{ movie_data.Year }}</p>
+            <p style="margin-bottom:5px"><b>Director:</b> {{ movie_data.Director }}</p>
+            <p style="margin-bottom:5px"><b>Plot:</b> {{ movie_data.Plot }}</p>
+            <p style="margin-bottom:5px"><b>Release Date:</b> {{ movie_data.Released }}</p>
+            <p style="margin-bottom:5px"><b>Age Rating:</b> {{ movie_data.Rated }}</p>
+            <p style="margin-bottom:5px"><b>Runtime:</b> {{ movie_data.Runtime }}</p>
+            <p style="margin-bottom:5px"><b>Main Cast:</b> {{ movie_data.Actors }}</p>
+            <p style="margin-bottom:5px"><b>Genre:</b> {{ movie_data.Genre }}</p>
+            <p style="margin-bottom:5px"><b>Country:</b> {{ movie_data.Country }}</p>
+            <p style="margin-bottom:5px"><b>IMDb Rating:</b> {{ movie_data.imdbRating }}</p>
+            <p style="margin-bottom:5px"><b>IMDb Votes:</b> {{ movie_data.imdbVotes }}</p>
+            <!-- <p style="margin-bottom:5px"><b>Rotten Tomatoes Rating:</b> {{ movie_data.Ratings.1.Value }}</p> -->
+        {% endif %}
+      </div>
+      
+      
+    </div>
+
+    <div class="OndeAssitir">
+      {% if movie_data %}
+        <h1 style="margin-right:20px">Available at:  </h1>
+        {% if first_three_providers %}
+            {% for provider in first_three_providers %}
+                <h4 id="barra">{{ provider.provider_name }}</h4>
+            {% endfor %}
+            {% if first_three_providers|length < 3 %}
+            {% endif %}
+        {% else %}
+            <p>No Streaming Services Found!</p>
+        {% endif %}
+    {% endif %}
+    </div>
+
   {% if movie_data %}
+    <div class="MainBoard Comments">
+
+    </div>
+  </div>
+  <!-- {% if movie_data %}
       <h1 style="margin-bottom:8px">{{ movie_data.Title }}</h1>
       <p style="margin-bottom:5px">Year: {{ movie_data.Year }}</p>
       <p style="margin-bottom:5px">Director: {{ movie_data.Director }}</p>
@@ -18,6 +112,36 @@
       <p style="margin-bottom:5px">Rotten Tomatoes Rating: {{ movie_data.Ratings.1.Value }}</p>
   {% else %}
       <p>No movie data found.</p>
+  {% endif %} -->
+  <div class="MainBoard">
+
+          {% if request.user.is_authenticated %}
+          
+          <form method="post">
+          {% csrf_token %}
+          <input placeholder=" Add a comment" id="PesquiseAqui" name="comment" >
+          <input type="submit" id="Botao">
+          </form>
+          {% endif %}
+
+
+    
+        </div>
+      </div>
+      
+    <div class="container">
+      <div class="comment_container">
+        <ul>
+            {% for comment in comments %}
+                <li class="comment_card">{{ comment.comment }}<div class="comment_card-footer">
+                  {{ comment.user_comment }}
+                <div class="likes">likes 123</div>
+                <div class="dislikes">dislikes 321</div></li>
+            {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
   {% endif %}
 </body>
 </html>

@@ -14,7 +14,7 @@
 */
 
 :root {
-  
+
 }
 
 *{
@@ -23,6 +23,7 @@
     box-sizing: border-box;
     font-family: Poppins;
     color: white;
+   scroll-behavior: smooth;
 }
 
 body{
@@ -62,7 +63,7 @@ header{
   0%{
     content: url('/static/images/animation/livro00.png');
     width:80px;
-    
+
   }
   10% {
     content: url('/static/images/animation/livro01.png');
@@ -106,7 +107,7 @@ header{
     content: url('/static/images/animation/livro09.png');
     width:80px;
   }
-  
+
 }
 @keyframes logo-animation2 {
   0%,10% {
@@ -203,14 +204,14 @@ header{
 
 }
 #PesquiseAqui{
-    margin-left: 3vw;
+    margin-left: 200px;
     background-color: #0B2447;
     border: none;
     outline: none;
     font-size: 15px;
     border-radius: 25px;
     padding: 10px 10px 10px 20px;
-    width: min(35vw, 500px);
+    width: 25vw;
 }
 #PesquiseAqui::placeholder{
     color: white;
@@ -218,10 +219,6 @@ header{
 }
 #h1main{
     text-align: center;
-}
-#GenreSelect {
-  min-width: 350px;
-
 }
 #BotaoEdit{
     margin: 7px;
@@ -239,46 +236,14 @@ header{
 
 }
 
-select { /* Não consegui implementar a animação de hover, e ainda tô tentando estilizar as caixas de seleção */
-  appearance: none;
-  webkit-appearance: none;
-  width: 30%;
-  font-size: 25px;
-  padding: 10px;
-  background-color: transparent;
-  border: 3px solid #576CBC;
-  border-radius: 35px;
-  color: #white;
-  cursor: pointer;
-  text-align: center;
-  display: block;
-  margin: auto;
-}
-
-.main{
-  display:flex;
-  margin-top:30px;
-  justify-content: center;
-  flex-direction:column;
-}
-
-.profile-pic-nav-container{
-  display: flex; 
-  justify-content: center; 
-  align-content: center; 
-  width: 55px;
-  aspect-ratio: 1/1;
-  padding-left: 10px;
-}
-
 .profile-pic-nav{
-  border-radius: 50%;
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.3s;
-  border: 4px solid #576CBC;
   width: 55px;
-  aspect-ratio: 1/1;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-left: 15px;
+  margin-top: 10px;
+  transition: transform 0.3s;
+  border: 3px solid #576CBC;
 }
 
 .profile-pic-nav:hover{
@@ -287,167 +252,86 @@ select { /* Não consegui implementar a animação de hover, e ainda tô tentand
 }
 
 .profile-pic{
-  width: 5rem;
-  height: 5rem;
+  width: 6vw;
   border-radius: 50%;
   border: 3px solid #576CBC;
 }
 
-.profile-info-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 3rem;
-}
-
-.profile-info-box {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  background-color: #2d325b;
-  border-radius: 2.5rem;
-  width: min(80%, 1100px);
-  padding: 1.5rem 4rem 2rem 2rem;
-}
-
-.profile-info {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.profile-info-txt{
-  font-size: 1.2rem;
-}
-
-.update-profile-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 5vw;
-  margin-left: 35vw;
-  margin-right: 35vw;
-  background-color: #2d325b;
-  padding-top: 1.5vw;
-  padding-bottom: 2vw;
-  padding-left: 2vw;
-  border-radius: 2.5vw;
-}
-
-.update-profile-info input{
-  background-color: #313866;
-  border: 2px solid #576CBC;
-  border-radius: 10px;
-  padding: 5px;
-  width: 100%;
-  margin-bottom: 10px;
-}
-.update-profile-info input[type='file']{
-  background-color: #313866;
-  border: 2px solid #576CBC;
-  border-radius: 10px;
-  padding: 5px;
-  margin-bottom: 10px;
-}
-
-.update-profile-info textarea{
-  background-color: #313866;
-  border: 2px solid #576CBC;
-  border-radius: 10px;
-  resize: none;
-  padding: 5px;
-  width: 100%;
-  max-height: 150px;
-}
-
-.profile-assistidos-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: min(3%, 43.1875px);
-  margin-bottom: min(3%, 43.1875px);
-}
-
-.profile-assistidos-content {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  gap: 27px;
-  width: min(70%, 1008px);
-}
-
-.profile-assistidos {
-  width: 180px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  position: relative;
-}
-
-.profile-assistidos img {
-  border-radius: 10px;
-  width: 100%;
-  object-fit: cover;
-}
-
-.profile-assistidos-hidden {
-  position: absolute;
-  width: 180px;
-}
-
-.profile-assistidos:hover img{
-      -webkit-filter: brightness(50%);
-      -webkit-transition: all 0.5s ease;
-      -moz-transition: all 0.5s ease;
-      -o-transition: all 0.5s ease;
-      -ms-transition: all 0.5s ease;
-      transition: all 0.5s ease;
-      cursor: pointer;
-}
-
-/* Add this to your CSS */
-.profile-assistidos-hidden::after {
-  display: block;
-  position: absolute;
-  background-color: #2d325b;
-  color: white;
-  font-size: 80%;
-  padding: 5px;
-  border-radius: 10px;
-  border: 2px solid #576CBC;
-  top: 5px; /* Adjust the position as needed */
-  left: 5px; /* Adjust the position as needed */
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* Apply the hover effect to the element */
-.profile-assistidos-hidden:hover {
-  position: relative;
-}
-
-.selecionar{
+.main{
   display:flex;
-  flex-direction:column;
-  justify-content: space-between;
-  align-items:center;
+  margin-top:30px;
+  align-content: center;
+  flex-direction:row;
 }
 
-.recomendar{
+.selecaoGenero{
+  display:fixed;
+  flex-direction:column;
+  width: 40vh;
+  height:100%;
+  margin-left:40px;
+  border-right: 7px solid #576CBC;
+  border-bottom: 7px solid #576CBC;
+  border-radius:10px;
+  padding-bottom:10px;
+  
+
+}
+
+.mainPage{
+  /* width: 200vh; */
+  height:100%;
+  margin-left:10px;
+}
+#ListGenero{
+  text-decoration:none;
+  list-style-type: none;
+  width:120px;
+}
+.selecaoGenero li{
+  border: 4px solid #576CBC;
+  border-radius:35px;
+  padding:5px 10px 5px 10px;
+  margin: 5px;
+  text-align:center;
+  
+  
+  
+}
+.selecaoGenero li:hover{
+    transform: scale(0.94);
+    background-color: rgba(165, 215, 232, 0.2);
+
+}
+#TopRated,#Popular,#Action,#Adventure,#Comedy,#Drama,#Horror,#Sci-fi,#Documentary,#Music,#Romance{
+  height:250px;
+  margin:20px 0px 0px 20px;
+  /* border:6px solid black; */
+}
+
+.listFilm{
+  margin-top:10px;
+  display:flex;
+  flex-direction:row;
+  align-content:center;
+  overflow-x:scroll;
+  width:1100px;
+}
+
+.poster{
   display:flex;
   flex-direction:column;
   justify-content:center;
-  align-items:center;
-  margin-top:10px;
+  align-content:center;
+  margin:0px 10px 0px 10px;
 }
 
-#GenreSelect option:hover, #GenreSelect option:focus {
-    background-color: #e91c1cr;
-}
-
-.optionSelect{
-  background-color:#313866
+.poster:hover{
+  -webkit-filter: brightness(50%);
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  -ms-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  cursor: pointer;
 }

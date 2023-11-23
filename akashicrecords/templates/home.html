@@ -14,7 +14,7 @@
   <header>
     <div class="navbar">
       <div class="navbarRight">
-          <a href=""> <img src="/static/images/Logo AKS Shadows.png" height="80px", width="80px" id="logo"></a>
+          <a href="/"> <img src="/static/images/Logo AKS Shadows.png" height="80px", width="80px" id="logo"></a>
         
         <form method="post" action="/search/">
             {% csrf_token %}
@@ -23,23 +23,27 @@
         </form>
       </div>    
       <div class="navbarLeft">
-          <ul id="ListaButoes">
-              <a href="/"><span><li id="ItensListaButoes">Home</li></span></a>
-              <a href="" ><li id="ItensListaButoes">Filmes</li></a>
-              <a href=""><li id="ItensListaButoes">Musicas</li></a>
-          </ul>
+        <ul id="ListaButoes">
+            <a href="/"><span><li id="ItensListaButoes">Home</li></span></a>
+            <a href="movies/" ><li id="ItensListaButoes">Movies</li></a>
+        </ul>
         <div class="Login">
-            {% if request.user.is_authenticated %}
-                <a href="logout/"><button id="Botao" style="width: 100px;">Logout</button></a>
-            {% else %}
-                <a href="login/"><button id="Botao" style="width: 100px;">Login</button></a>
-                <a href="/registrar/"><button id="Botao">Registre-se</button></a>
-            {% endif %}
+          {% if request.user.is_authenticated %}
+              <a href="/logout/"><button id="Botao" style="width: 100px;">Logout</button></a>
+          {% else %}
+              <a href="/login/"><button id="Botao" style="width: 100px;">Login</button></a>
+              <a href="/registrar/"><button id="Botao">Register</button></a>
+          {% endif %}
         </div>
+        <div class="profile-pic-nav-container">
+          {% if request.user.is_authenticated %}
+            <a href="/profile/{{ request.user.username }}"><img src="{{ request.user.profile.image.url }}" class="profile-pic-nav"></a>
+          {% endif %}
+        </div>
+      </div>  
     </div>
-    </div>
-
   </header>
+
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const selectField = document.querySelector('#GenreSelect');
@@ -54,39 +58,64 @@
   
   <div class="main">
     {% if request.user.is_authenticated %}
-    <!-- <h1 id="h1main"> Você está logado!!!</h1> -->
     
-    <h1 id="h1main">Bem Vindo <span style="color:#A5D7E8 ;">{{request.user.username}}</span> !</h1>
+     <h1 id="h1main">Welcome <span style="color:#A5D7E8 ;">{{request.user.username}}</span> !</h1>
+    <div class="selecionar">
+      <div>
+        <h1 id="h1main">What genre would you like to watch today?</h1><br>
+        <select name="genre" id="GenreSelect" form="recommend_form">
+          <option class="optionSelect" value="">Select...</option>
+          <option class="optionSelect" value="Action">Action</option>
+          <option class="optionSelect" value="Adventure">Adventure</option>
+          <option class="optionSelect" value="Animation">Animation</option>
+          <option class="optionSelect" value="Biography">Biography</option>
+          <option class="optionSelect" value="Comedy">Comedy</option>
+          <option class="optionSelect" value="Crime">Crime</option>
+          <option class="optionSelect" value="Documentary">Documentary</option>
+          <option class="optionSelect" value="Drama">Drama</option>
+          <option class="optionSelect" value="Fantasy">Fantasy</option>
+          <option class="optionSelect" value="Family">Family</option>
+          <option class="optionSelect" value="History">History</option>
+          <option class="optionSelect" value="Horror">Horror</option>
+          <option class="optionSelect" value="Mystery">Mystery</option>
+          <option class="optionSelect" value="Music">Music</option>
+          <option class="optionSelect" value="Musical">Musical</option>
+          <option class="optionSelect" value="Police">Police</option>
+          <option class="optionSelect" value="Romance">Romance</option>
+          <option class="optionSelect" value="Sci-fi">Sci-fi</option>
+          <option class="optionSelect" value="Short">Short</option>
+          <option class="optionSelect" value="Thriller">Thriller</option>
+          <option class="optionSelect" value="War">War</option>
+          <option class="optionSelect" value="Western">Western</option>
+        </select>
+      </div>
+      
+      <details>
+        <summary>Additional filters</summary>
+        <form action="/recommend/" id="recommend_form">
+          <p>Minimum rating: <input type="number"></p>
+          <p>Minimum votes: <input type="number"></p>
+          
+        </form>
+      </details>
+      
+      
+      <div class="recomendar">
+        <a id='genreLink' href="/recommend/?genre={{ genre }}">
+          <button id="Botao">Recommend</button>
+        </a>
+        
+        
+        <!-- Somente para teste -->
+        <!-- The selected genre was: {{ genre }} -->
+      </div>
+      {% else %}
+      <h1 id="h1main"> You're <span style="color:#A5D7E8;">not</span> logged on!!!</h1>
+      {% endif %}
+    </div>
+    <!-- <a href="import/"><button>Import database</button></a>   -->
+  
 
-    <h1 id="h1main">Por favor, selecione um gênero de filme para obter uma recomendação:</h1><br>
-    <select name="genre" id="GenreSelect">
-      <option value="">Selecionar...</option>
-      <option value="Action">Ação</option>
-      <option value="Adventure">Aventura</option>
-      <option value="Comedy">Comédia</option>
-      <option value="Dance">Dance</option>
-      <option value="Documentary">Documentário</option>
-      <option value="Drama">Drama</option>
-      <option value="Farwest">Faroeste</option>
-      <option value="Fantasy">Fantasia</option>
-      <option value="Sci-fi">Ficção Científica</option>
-      <option value="War">Guerra</option>
-      <option value="Mistery">Mistério</option>
-      <option value="Musical">Musical</option>
-      <option value="Police">Policial</option>
-      <option value="Romance">Romance</option>
-      <option value="Thriller">Suspense</option>
-      <option value="Horror">Terror</option>
-    </select>
-
-    O gênero escolhido foi: {{ genre }}
-    <a id='genreLink' href="/recommend/?genre={{ genre }}">
-      <button id="Botao">Recomendar</button>
-    </a>
-    
-    {% else %}
-    <h1 id="h1main"> Você <span style="color:#A5D7E8;">não</span> está logado!!!</h1>
-    {% endif %}
  </div>
   
 </body>
