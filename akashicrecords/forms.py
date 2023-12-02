@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from .models import Movie, Profile
+from .models import Movie, Profile, Watched
 from django import forms
 
 # class MovieForm(ModelForm):
@@ -22,6 +22,11 @@ class ProfileUpdateForm(forms.ModelForm):
   class Meta:
     model = Profile
     fields = ['bio' ,'image']
-    
+
+class AddWatched(forms.ModelForm):
+  class Meta:
+    model = Watched
+    fields=['user', 'rating', 'movie']
+
 # class Recommendation(forms.ModelForm):
   

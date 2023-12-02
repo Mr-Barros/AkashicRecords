@@ -18,7 +18,7 @@
 
         <form method="post" action="/search/">
             {% csrf_token %}
-            <input type="search" placeholder="Pesquise Aqui" id="PesquiseAqui" name="search">
+            <input type="search" placeholder="Search Movies" id="PesquiseAqui" name="search">
             <button id="Botao" type="submit" style="padding-top: 5px; padding-bottom: 7px;">Search</button>
         </form>
       </div>    
@@ -43,10 +43,9 @@
       </div>  
     </div>
   </header>
-
-  <div class="main">
+  
     {% if request.user.is_authenticated %}
-
+  <div class="main">
     <div class="selecaoGenero">
       <h1>Go to:</h1>
       <ul>
@@ -64,9 +63,8 @@
     <div class="mainPage">
       <div id="Popular">
         <h2>Popular</h2>
-         
         <div class="listFilm">
-          {% for movie in popular_movies %}
+          {% for movie in popular %}
             <div class="poster">
               <a href="/search?title={{ movie.title }}"><img class="posterImg" style="height:180px; width:130px; border-radius:10px;" src="{{ movie.url }}" alt="{{ movie.title }} poster"></a>
               <a href="/search?title={{ movie.title }}">
@@ -76,13 +74,12 @@
               </a>
             </div>
           {% endfor %}
-        
         </div>
       </div>
       <div id="TopRated">
         <h2>Top Rated</h2>
         <div class="listFilm">
-          {% for movie in top_rated_movies %}
+          {% for movie in top_rated %}
             <div class="poster">
               <a href="/search?title={{ movie.title }}"><img class="posterImg" style="height:180px; width:130px; border-radius:10px;" src="{{ movie.url }}" alt="{{ movie.title }} poster"></a>
               <a href="/search?title={{ movie.title }}"><div class="posterOverlay">
@@ -95,7 +92,7 @@
       <div id="Action">
         <h2>Action</h2>
         <div class="listFilm">
-          {% for movie in action_movies %}
+          {% for movie in Action %}
             <div class="poster">
               <a href="/search?title={{ movie.title }}"><img class="posterImg" style="height:180px; width:130px; border-radius:10px;" src="{{ movie.url }}" alt="{{ movie.title }} poster"></a>
               <a href="/search?title={{ movie.title }}"><div class="posterOverlay">
@@ -108,7 +105,7 @@
       <div id="Adventure">
         <h2>Adventure</h2>
         <div class="listFilm">
-          {% for movie in adventure_movies %}
+          {% for movie in Adventure %}
             <div class="poster">
               <a href="/search?title={{ movie.title }}"><img class="posterImg" style="height:180px; width:130px; border-radius:10px;" src="{{ movie.url }}" alt="{{ movie.title }} poster"></a>
               <a href="/search?title={{ movie.title }}"><div class="posterOverlay">
@@ -121,7 +118,7 @@
       <div id="Comedy">
         <h2>Comedy</h2>
         <div class="listFilm">
-          {% for movie in comedy_movies %}
+          {% for movie in Comedy %}
             <div class="poster">
               <a href="/search?title={{ movie.title }}"><img class="posterImg" style="height:180px; width:130px; border-radius:10px;" src="{{ movie.url }}" alt="{{ movie.title }} poster"></a>
               <a href="/search?title={{ movie.title }}"><div class="posterOverlay">
@@ -134,7 +131,7 @@
       <div id="Drama">
         <h2>Drama</h2>
         <div class="listFilm">
-          {% for movie in drama_movies %}
+          {% for movie in Drama %}
             <div class="poster">
               <a href="/search?title={{ movie.title }}"><img class="posterImg" style="height:180px; width:130px; border-radius:10px;" src="{{ movie.url }}" alt="{{ movie.title }} poster"></a>
               <a href="/search?title={{ movie.title }}"><div class="posterOverlay">
@@ -147,7 +144,7 @@
       <div id="Horror">
         <h2>Horror</h2>
         <div class="listFilm">
-          {% for movie in horror_movies %}
+          {% for movie in Horror %}
             <div class="poster">
               <a href="/search?title={{ movie.title }}"><img class="posterImg" style="height:180px; width:130px; border-radius:10px;" src="{{ movie.url }}" alt="{{ movie.title }} poster"></a>
               <a href="/search?title={{ movie.title }}"><div class="posterOverlay">
@@ -160,7 +157,7 @@
       <div id="Sci-fi">
         <h2>Sci-fi</h2>
         <div class="listFilm">
-          {% for movie in sci_fi_movies %}
+          {% for movie in Sci_Fi %}
             <div class="poster">
               <a href="/search?title={{ movie.title }}"><img class="posterImg" style="height:180px; width:130px; border-radius:10px;" src="{{ movie.url }}" alt="{{ movie.title }} poster"></a>
               <a href="/search?title={{ movie.title }}"><div class="posterOverlay">
@@ -173,7 +170,7 @@
       <div id="Romance">
         <h2>Romance</h2>
         <div class="listFilm">
-          {% for movie in romance_movies %}
+          {% for movie in Romance %}
             <div class="poster">
               <a href="/search?title={{ movie.title }}"><img class="posterImg" style="height:180px; width:130px; border-radius:10px;" src="{{ movie.url }}" alt="{{ movie.title }} poster"></a>
               <a href="/search?title={{ movie.title }}"><div class="posterOverlay">
@@ -186,7 +183,7 @@
       <div id="Documentary">
         <h2>Documentary</h2>
         <div class="listFilm">
-          {% for movie in documentary_movies %}
+          {% for movie in Documentary %}
             <div class="poster">
               <a href="/search?title={{ movie.title }}"><img class="posterImg" style="height:180px; width:130px; border-radius:10px;" src="{{ movie.url }}" alt="{{ movie.title }} poster"></a>
               <a href="/search?title={{ movie.title }}"><div class="posterOverlay">
@@ -199,7 +196,7 @@
       <div id="Music">
         <h2>Music</h2>
         <div class="listFilm">
-          {% for movie in music_movies %}
+          {% for movie in Music %}
             <div class="poster">
               <a href="/search?title={{ movie.title }}"><img class="posterImg" style="height:180px; width:130px; border-radius:10px;" src="{{ movie.url }}" alt="{{ movie.title }} poster"></a>
               <a href="/search?title={{ movie.title }}"><div class="posterOverlay">
@@ -209,12 +206,12 @@
           {% endfor %}
         </div>
       </div>
-      
+
     </div>
-      {% else %}
-      <h1 id="h1main"> You're <span style="color:#A5D7E8;">not</span> logged on!!!</h1>
-      {% endif %}
   </div>
+    {% else %}
+    <h1 id="h1main" style="margin-top:30px;"> You're <span style="color:#A5D7E8;">not</span> logged on!!!</h1>
+    {% endif %}
 
 </body>
 </html>
@@ -230,9 +227,4 @@
       });
     }
   }
-  function scrollListFilm(offset) {
-    const listFilm = document.querySelector('.listFilm');
-    listFilm.scrollLeft += offset; // Scroll to the right by the specified offset (positive value) or left by the specified offset (negative value)
-  }
-
 </script>

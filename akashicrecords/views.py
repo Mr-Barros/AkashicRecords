@@ -6,7 +6,7 @@ import requests
 from django.conf import settings
 from django.db.models import Q
 from .models import Movie, Watched, Comment
-from .forms import UserUpdateForm, ProfileUpdateForm
+from .forms import UserUpdateForm, ProfileUpdateForm, AddWatched
 from random import randint
 
 
@@ -66,7 +66,7 @@ def search(request):
   comments = Comment.objects.all()
   if request.method == "POST":
       movie_title = request.POST.get("search")
-
+      
       # OMDB
       omdb_api_key = settings.OMDB_API_KEY
       omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie_title}"
@@ -169,6 +169,9 @@ def search(request):
   return render(request, 'search.html', context={'comments': comments})
   return redirect("home")
 
+def db_search(request, movie_id):
+    movie = Movie.objects.filter(id=movie_id).first()
+    render(request, "db_search.html", context={'movie': movie})
 
 @login_required
 def profile_page(request, username):
@@ -192,35 +195,63 @@ def update_profile_page(request, username):
       u_form.save()
       p_form.save()
       return redirect(f'/profile/{username}/')
-      print("DEU RUIM")
     return render(request, 'update_profile.html', {'user': user, 'u_form' : u_form, 'p_form' : p_form})
 
-
 @login_required
-def add_watched_movie(request, username):
+def add_watched_movie(request, username, movie_id):
+  id = int(movie_id[2:])
   user = User.objects.filter(username=request.user.__str__()).first()
-  movie = Movie.objects.filter(id=request.POST.get('imdb_id')).first()
+  movie = Movie.objects.filter(id=id).first()
+  form = AddWatched(instance=movie)
   if request.method == 'GET':
-    return redirect("/search/")
+    return render(request, 'add_watched.html', context={"movie": movie, "user":user, "form":form})
   if request.method == 'POST' and movie:
     user.profile.watched_movies.add(movie)
     user.save()
-    return redirect("/search/")
-  return redirect("/search/")
+    return redirect(f"/profile/{username}/")
+  return redirect("/home/")
 
 
 @login_required
 def recommendation(request):
-  genre = request.GET.get('genre')
+  profile = User.objects.filter(username=request.user.__str__()).first()
   
-  base_query = Q(imdb_rating__gt=5, imdb_votes__gt=1000)
+  genre = request.GET.get('genre')
+  rated = request.GET.get('rated')
+  director = request.GET.get('director')
+  country = request.GET.get('country')
+  recommend_new = request.GET.get('recommend_new')
+  min_rating = request.GET.get('min_rating')
+  if not min_rating: min_rating = 5 
+  min_votes = request.GET.get('min_votes')
+  if not min_votes: min_votes = 1000
+  min_year = request.GET.get('min_year')
+  if not min_year: min_year = 1900
+  max_year = request.GET.get('max_year')
+  if not max_year: max_year = 2100
+  min_runtime = request.GET.get('min_runtime')
+  if not min_runtime: min_runtime = 0
+  max_runtime = request.GET.get('max_runtime')
+  if not max_runtime: max_runtime = 10000
+  watched = profile.profile.watched_movies.all()
+  
+  
+  query = Q(imdb_rating__gte=min_rating, imdb_votes__gte=min_votes, year__gte=min_year, year__lte=max_year, runtime__gte=min_runtime, runtime__lte=max_runtime)
   
   if genre:
-    genre_query = Q(genre__icontains=genre)
-    movies = Movie.objects.filter(base_query & genre_query)
-  else:
-    movies = Movie.objects.filter(base_query)
-    
+    query &= Q(genre__icontains=genre)
+  if rated:
+    query &= Q(rated__lte=rated)
+  if director:
+    query &= Q(director__icontains=director)
+  if country:
+    query &= Q(country__icontains=country)
+
+  
+  movies = Movie.objects.filter(query)
+  if recommend_new:
+    movies = movies.exclude(id__in=watched)
+
   movie_amount = movies.count()
   if (movie_amount > 0):
     index = randint(0, movie_amount - 1)
@@ -305,8 +336,16 @@ def add_to_database(movie_data):
     movie.website = movie_data['Website']
   elif movie.type == 'series':
     if movie_data['Year'] != 'N/A' and '–' in movie_data['Year']:
-      movie.year = int(movie_data['Year'].split('–')[0])
-      movie.end_year = int(movie_data['Year'].split('–')[1])
+      start_year = movie_data['Year'].split('–')[0]
+      end_year = movie_data['Year'].split('–')[1]
+      if start_year:
+        movie.year = int(start_year)
+      else:
+        movie.year = None
+      if end_year:
+        movie.end_year = int(end_year)
+      else:
+        movie.end_year = None
     elif movie_data['Year'] != 'N/A':
       movie.year = int(movie_data['Year'])
     else:
@@ -324,6 +363,7 @@ def movies(request):
   tmdb_params = {
       'api_key': tmdb_api_key
   }
+  
   #POPULAR
   tmdb_response = requests.get(tmdb_popular_url, params=tmdb_params)
   tmdb_popular_data = tmdb_response.json()
@@ -345,7 +385,6 @@ def movies(request):
     movie["url"] = poster_url
 
   #TOP RATED
-  
   for movie in top_rated_movies:
     title = movie['title']
     omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={title}"
@@ -353,13 +392,189 @@ def movies(request):
     omdb_data = omdb_response.json()
     poster_url = omdb_data.get('Poster')
     movie["url"] = poster_url
-    
+
+  #ACTION
+  action_movies = Movie.objects.filter(genre__icontains='Action').order_by('?')[:20]
+  action_movies_data = []
+  for movie in action_movies:
+      # omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
+      # omdb_response = requests.get(omdb_url)
+      # omdb_data = omdb_response.json()
+      # poster_url = omdb_data.get('Poster')
+      poster_url = movie.poster
+      if poster_url and poster_url!="N/A":
+        response_poster = requests.get(poster_url)
+        if response_poster.status_code == 200:
+          action_movies_data.append({'title': movie.title, 'url': poster_url})
+
+
+  #ADVENTURE
+  adventure_movies = Movie.objects.filter(genre__icontains='Adventure').order_by('?')[:20]
+  adventure_movies_data = []
+  for movie in adventure_movies:
+      # omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
+      # omdb_response = requests.get(omdb_url)
+      # omdb_data = omdb_response.json()
+      # poster_url = omdb_data.get('Poster')
+      poster_url = movie.poster
+      if poster_url and poster_url!="N/A":
+        response_poster = requests.get(poster_url)
+        if response_poster.status_code == 200:
+          adventure_movies_data.append({'title': movie.title, 'url': poster_url})
+
+  #COMEDY
+  comedy_movies = Movie.objects.filter(genre__icontains='Comedy').order_by('?')[:20]
+  comedy_movies_data = []
+  for movie in comedy_movies:
+      # omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
+      # omdb_response = requests.get(omdb_url)
+      # omdb_data = omdb_response.json()
+      # poster_url = omdb_data.get('Poster')
+      poster_url = movie.poster
+      if poster_url and poster_url!="N/A":
+        response_poster = requests.get(poster_url)
+        if response_poster.status_code == 200:
+          comedy_movies_data.append({'title': movie.title, 'url': poster_url})
+
+  #DRAMA
+  drama_movies = Movie.objects.filter(genre__icontains='Drama').order_by('?')[:20]
+  drama_movies_data = []
+  for movie in drama_movies:
+      # omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
+      # omdb_response = requests.get(omdb_url)
+      # omdb_data = omdb_response.json()
+      # poster_url = omdb_data.get('Poster')
+      poster_url = movie.poster
+      if poster_url and poster_url!="N/A":
+        response_poster = requests.get(poster_url)
+        if response_poster.status_code == 200:
+          drama_movies_data.append({'title': movie.title, 'url': poster_url})
+
+  #HORROR
+  horror_movies = Movie.objects.filter(genre__icontains='Horror').order_by('?')[:20]
+  horror_movies_data = []
+  for movie in horror_movies:
+      # omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
+      # omdb_response = requests.get(omdb_url)
+      # omdb_data = omdb_response.json()
+      # poster_url = omdb_data.get('Poster')
+      poster_url = movie.poster
+      if poster_url and poster_url!="N/A":
+        response_poster = requests.get(poster_url)
+        if response_poster.status_code == 200:
+          horror_movies_data.append({'title': movie.title, 'url': poster_url})
+
+  #Sci-Fi
+  Sci_Fi_movies = Movie.objects.filter(genre__icontains='Sci-Fi').order_by('?')[:20]
+  Sci_Fi_movies_data = []
+  for movie in Sci_Fi_movies:
+      omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
+      omdb_response = requests.get(omdb_url)
+      omdb_data = omdb_response.json()
+      poster_url = omdb_data.get('Poster')
+      # poster_url = movie.poster
+      if poster_url and poster_url!="N/A":
+        response_poster = requests.get(poster_url)
+        if response_poster.status_code == 200:
+          Sci_Fi_movies_data.append({'title': movie.title, 'url': poster_url})
+
+  #ROMANCE
+  Romance_movies = Movie.objects.filter(genre__icontains='Romance').order_by('?')[:20]
+  Romance_movies_data = []
+  for movie in Romance_movies:
+      # omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
+      # omdb_response = requests.get(omdb_url)
+      # omdb_data = omdb_response.json()
+      # poster_url = omdb_data.get('Poster')
+      poster_url = movie.poster
+      if poster_url and poster_url!="N/A":
+        response_poster = requests.get(poster_url)
+        if response_poster.status_code == 200:
+          Romance_movies_data.append({'title': movie.title, 'url': poster_url})
+
+  #DOCUMENTARY
+  Documentary_movies = Movie.objects.filter(genre__icontains='Documentary').order_by('?')[:20]
+  Documentary_movies_data = []
+  for movie in Documentary_movies:
+      # omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
+      # omdb_response = requests.get(omdb_url)
+      # omdb_data = omdb_response.json()
+      # poster_url = omdb_data.get('Poster')
+      poster_url = movie.poster
+      if poster_url and poster_url!="N/A":
+        response_poster = requests.get(poster_url)
+        if response_poster.status_code == 200:
+          Documentary_movies_data.append({'title': movie.title, 'url': poster_url})
+
+  #MUSIC
+  Music_movies = Movie.objects.filter(genre__icontains='Music').order_by('?')[:20]
+  Music_movies_data = []
+  for movie in Music_movies:
+      # omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
+      # omdb_response = requests.get(omdb_url)
+      # omdb_data = omdb_response.json()
+      # poster_url = omdb_data.get('Poster')
+      poster_url = movie.poster
+      if poster_url and poster_url!="N/A":
+        response_poster = requests.get(poster_url)
+        if response_poster.status_code == 200:
+          Music_movies_data.append({'title': movie.title, 'url': poster_url})
+
+  
   context = {
       'popular_movies': popular_movies,
-      'top_rated_movies': top_rated_movies
+      'top_rated_movies': top_rated_movies,
+      'action_movies':action_movies_data,
+      'adventure_movies':adventure_movies_data,
+      'comedy_movies':comedy_movies_data,
+      'drama_movies': drama_movies_data,
+      'horror_movies': horror_movies_data,
+      'sci_fi_movies': Sci_Fi_movies_data,
+      'romance_movies': Romance_movies_data,
+      'documentary_movies': Documentary_movies_data,
+      'music_movies': Music_movies_data,
   }
   return render(request, 'movies.html', context)
   
+
+def movies2(request):
+  tmdb_api_key = settings.TMDB_API_KEY
+  tmdb_params = {
+      'api_key': tmdb_api_key
+  }
+  omdb_api_key = settings.OMDB_API_KEY
+  genre_set = ['Action', 'Adventure', 'Animation', 'Comedy', 'Documentary', 'Drama', 'Horror', 'Sci-Fi', 'Romance', 'Music']
+  context = {}
+
+  for category in ['popular', 'top_rated']:
+    tmdb_url = f"https://api.themoviedb.org/3/movie/{category}"
+    tmdb_response = requests.get(tmdb_url, params=tmdb_params)
+    tmdb_data = tmdb_response.json()
+    
+    movies = [{'title': movie['title'], 'id': movie['id']} for movie in tmdb_data.get('results', [])]
+    for movie in movies:
+      title = movie['title']
+      omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={title}"
+      omdb_response = requests.get(omdb_url)
+      omdb_data = omdb_response.json()
+      poster_url = omdb_data.get('Poster')
+      movie["url"] = poster_url
+      context[category] = movies
+  
+  for genre in genre_set:
+    movies = Movie.objects.filter(genre__icontains=genre).order_by('?')[:20]
+    movies_data = []
+    if genre == "Sci-Fi":
+      genre = "Sci_Fi"
+    for movie in movies:
+        poster_url = movie.poster
+        if poster_url and poster_url!="N/A":
+          response_poster = requests.get(poster_url)
+          if response_poster.status_code == 200:
+            movies_data.append({'title': movie.title, 'url': poster_url})
+        context[genre] = movies_data
+  return render(request, 'movies2.html', context)
+
 
 #def comment(request):
 #  if request.method == 'POST':
@@ -371,11 +586,18 @@ def movies(request):
 #    form = CommentsForm()
 #  return render(request, 'search.html', {'form': form})
 
-def comments(request):
- comments = Comment.objects.all()
- if request.method == 'POST':
-   Comment.objects.create(
-     comment= request.POST["comment"]
-   )
-   return redirect('/search/')
- return render(request, 'search.html', context={'comments': comments})
+def comments(request, username, movie_title):
+  profile = User.objects.filter(username=username).first().profile
+  movie = Movie.objects.filter(title=movie_title).first()
+
+  print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+  
+  if request.method == 'POST':
+    comment = Comment.objects.create(
+      comment = request.POST["comment"],
+      movie = movie,
+      )
+    comment.profile.add(profile)
+    comment.save()
+    return redirect(f"/search?title={movie.title}")
+  return redirect(f"/search?title={movie.title}")

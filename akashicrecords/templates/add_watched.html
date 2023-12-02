@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Page</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styleSearch.css' %}">
 </head>
 
 <body>
@@ -18,14 +19,14 @@
 
         <form method="post" action="/search/">
             {% csrf_token %}
-            <input type="search" placeholder="Pesquise Aqui" id="PesquiseAqui" name="search">
+            <input type="search" placeholder="Search Movies" id="PesquiseAqui" name="search">
             <button id="Botao" type="submit" style="padding-top: 5px; padding-bottom: 7px;">Search</button>
         </form>
       </div>    
       <div class="navbarLeft">
         <ul id="ListaButoes">
             <a href="/"><span><li id="ItensListaButoes">Home</li></span></a>
-            <a href="/movies" ><li id="ItensListaButoes">Movies</li></a>
+            <a href="movies/" ><li id="ItensListaButoes">Movies</li></a>
         </ul>
         <div class="Login">
           {% if request.user.is_authenticated %}
@@ -35,26 +36,38 @@
               <a href="/registrar/"><button id="Botao">Register</button></a>
           {% endif %}
         </div>
+        <div class="profile-pic-nav-container">
+          {% if request.user.is_authenticated %}
+            <a href="/profile/{{ request.user.username }}"><img src="{{ request.user.profile.image.url }}" class="profile-pic-nav"></a>
+          {% endif %}
+        </div>
       </div>  
     </div>
   </header>
 
-  <div class="update-profile-info">
-    <h1 style="font-size: 350%; padding-top: 25px;" >Update Profile</h1>
-    <img src="{{ request.user.profile.image.url }}" class="profile-pic">
+  <div class="add-watched-info">
+  <div class="MainBoardTop">
+    <div class="Title">
+      {% if movie %}
+      <h1 style="margin-bottom:8px">{{ movie.title }}</h1>
+    {% else %}
+        <p>No movie data found.</p>
+    {% endif %}
+    </div>
+  </div>
+  <div class="MainBoardContent" style="gap: 2vw;">
+    <!-- <div class="Poster"> -->
+       <!-- <img style="width:250px"src="/static/images/Poster Example.jpg"> -->
+       <img style="width:250px; border-radius: 20px;" src={{ movie.poster }}>
+    <!-- </div> -->
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
-      <p><b>Username</b></p>
-      {{ u_form.username }}
-      <p><b>Email</b></p>
-      {{ u_form.email }}
-      <p><b>Bio</b></p>
-      {{ p_form.bio }}
-      <p><b>Profile Image</b></p>
-      {{ p_form.image }}
-      <div style="display: flex; flex-direction: row; justify-content: center;">
-        <button type="submit" id="Botao" style="margin-top: 20px;">Save</button>
-        <a href="/profile/{{ request.user.username }}/" ><button style="margin-top: 20px;" id="Botao">Cancel</button></a>
+      <div style="display:flex; flex-direction:column; align-items: center; justify-content: center; padding-top: 30px;">
+        <div class="add_watched">
+          <p style='font-size:150%;'><b>Rating:</b></p>
+          {{ form.rating }}
+        </div>
+        <button type="submit" id="Botao" style="margin-top: 20px;"><b>Add</b></button>
       </div>
     </form>
   </div>

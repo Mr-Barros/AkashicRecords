@@ -44,15 +44,11 @@
   <div class="MainBoard">
     <div class="Voltar">
       <a href="/"><input type="button" id="BotaoContent" value="Back"></input></a>
-      {% if request.user.is_authenticated %}
-      {% if movie_data %}
       <a href="/search/{{ request.user.username }}/{{ movie_data.imdbID }}/"><input type="button" id="BotaoContent" value="Add Watched"></input></a>
-      {% endif %}
-      {% endif %}
     </div>
     <div class="MainBoardTop">
       <div class="Title">
-      {% if movie_data %}
+        {% if movie_data %}
         <h1 style="margin-bottom:8px">{{ movie_data.Title }}</h1>
       {% else %}
           <p>No movie data found, try making a different search.</p>
@@ -122,11 +118,10 @@
 
           {% if request.user.is_authenticated %}
           
-          <form method="post" action="/comment/{{ request.user.username }}/{{ 
-            movie_data.Title }}/">
+          <form method="post" action="search/">
           {% csrf_token %}
           <input placeholder=" Add a comment" id="PesquiseAqui" name="comment" >
-          <input type="submit" id="Botao">
+          <input type="submit" id="Botao" href= "/comment/{{ request.user.username }}" >
           </form>
           {% endif %}
 

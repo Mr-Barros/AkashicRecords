@@ -27,6 +27,8 @@ urlpatterns = [
     path("recommend/", views.recommendation),
     path("logout/",views.logout_user, name="logout"),
     path("search/", views.search, name="search"),
+    path("comment/<str:username>/<str:movie_title>/", views.comments, name="comment"),
+    path("search/<str:username>/<str:movie_id>/", views.add_watched_movie, name="add_watched_movie"),
     path('movies/', views.movies, name='movies'),
     path("profile/<str:username>/", views.profile_page, name="profile"),
     path("profile/<str:username>/update_profile/", views.update_profile_page, name="udpdate_profile"),

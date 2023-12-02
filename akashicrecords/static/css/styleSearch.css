@@ -219,10 +219,12 @@ header{
   padding: 10px 10px 10px 20px;
   width: min(35vw, 500px);
 }
+
 #PesquiseAqui::placeholder{
     color: white;
     opacity:30%;
 }
+
 
 .MainBoard{
   display:flex;
@@ -292,6 +294,59 @@ header{
 .profile-pic-nav:hover{
   transform: scale(0.94);
   border-color: #A5D7E8
+}
+
+.add-watched-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 5vw;
+  margin-left: 35vw;
+  margin-right: 35vw;
+  margin-bottom:3vw;
+  background-color: #2d325b;
+  padding-top: 1.5vw;
+  padding-bottom: 2vw;
+  padding-left: 2vw;
+  border-radius: 2.5vw;
+}
+
+.add-watched-info input{
+  background-color: #313866;
+  border: 2px solid #576CBC;
+  border-radius: 10px;
+  padding: 5px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.add_watched {
+  display: flex; 
+  flex-direction: row; 
+  justify-content: space-around;
+}
+
+.add_watched select{
+  appearance: none;
+  webkit-appearance: none;
+  width: 30px;
+  height: 50px;
+  padding: 5px;
+  font-size: 17px;
+  background-color: transparent;
+  border: 3px solid #576CBC;
+  border-radius: 10px;
+  color: #white;
+  cursor: pointer;
+  text-align: center;
+  display: block;
+  margin-bottom: 3vh;
+  margin-left:8px;
+  margin-right:20px;
+}
+
+.add_watched option {
+  background-color:#313866;
 }
 
 .container{

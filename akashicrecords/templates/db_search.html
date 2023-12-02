@@ -22,7 +22,7 @@
       <div class="navbarLeft">
         <ul id="ListaButoes">
             <a href="/"><span><li id="ItensListaButoes">Home</li></span></a>
-            <a href="/movies" ><li id="ItensListaButoes">Movies</li></a>
+            <a href="movies/" ><li id="ItensListaButoes">Movies</li></a>
         </ul>
         <div class="Login">
           {% if request.user.is_authenticated %}
@@ -44,47 +44,36 @@
   <div class="MainBoard">
     <div class="Voltar">
       <a href="/"><input type="button" id="BotaoContent" value="Back"></input></a>
-      {% if request.user.is_authenticated %}
-      {% if movie_data %}
-      <a href="/search/{{ request.user.username }}/{{ movie_data.imdbID }}/"><input type="button" id="BotaoContent" value="Add Watched"></input></a>
-      {% endif %}
-      {% endif %}
     </div>
     <div class="MainBoardTop">
       <div class="Title">
-      {% if movie_data %}
-        <h1 style="margin-bottom:8px">{{ movie_data.Title }}</h1>
-      {% else %}
-          <p>No movie data found, try making a different search.</p>
-      {% endif %}
+        <h1 style="margin-bottom:8px">{{ movie.title }}</h1>
       </div>
     </div>
     <div class="MainBoardContent">
       <div class="Poster">
        <!-- <img style="width:250px"src="/static/images/Poster Example.jpg"> -->
-       <img style="width:250px" src={{ movie_data.Poster }}>
+       <img style="width:250px" src={{ movie.poster }}>
       </div>
       <div class="Content">
-        {% if movie_data %}
-            <p style="margin-bottom:5px"><b>Year:</b> {{ movie_data.Year }}</p>
-            <p style="margin-bottom:5px"><b>Director:</b> {{ movie_data.Director }}</p>
-            <p style="margin-bottom:5px"><b>Plot:</b> {{ movie_data.Plot }}</p>
-            <p style="margin-bottom:5px"><b>Release Date:</b> {{ movie_data.Released }}</p>
-            <p style="margin-bottom:5px"><b>Age Rating:</b> {{ movie_data.Rated }}</p>
-            <p style="margin-bottom:5px"><b>Runtime:</b> {{ movie_data.Runtime }}</p>
-            <p style="margin-bottom:5px"><b>Main Cast:</b> {{ movie_data.Actors }}</p>
-            <p style="margin-bottom:5px"><b>Genre:</b> {{ movie_data.Genre }}</p>
-            <p style="margin-bottom:5px"><b>Country:</b> {{ movie_data.Country }}</p>
-            <p style="margin-bottom:5px"><b>IMDb Rating:</b> {{ movie_data.imdbRating }}</p>
-            <p style="margin-bottom:5px"><b>IMDb Votes:</b> {{ movie_data.imdbVotes }}</p>
+          <p style="margin-bottom:5px"><b>Year:</b> {{ movie.Year }}</p>
+          <p style="margin-bottom:5px"><b>Director:</b> {{ movie.Director }}</p>
+          <p style="margin-bottom:5px"><b>Plot:</b> {{ movie.Plot }}</p>
+          <p style="margin-bottom:5px"><b>Release Date:</b> {{ movie.Released }}</p>
+          <p style="margin-bottom:5px"><b>Age Rating:</b> {{ movie.Rated }}</p>
+          <p style="margin-bottom:5px"><b>Runtime:</b> {{ movie.Runtime }}</p>
+          <p style="margin-bottom:5px"><b>Main Cast:</b> {{ movie.Actors }}</p>
+          <p style="margin-bottom:5px"><b>Genre:</b> {{ movie.Genre }}</p>
+          <p style="margin-bottom:5px"><b>Country:</b> {{ movie.Country }}</p>
+          <p style="margin-bottom:5px"><b>IMDb Rating:</b> {{ movie.imdbRating }}</p>
+          <p style="margin-bottom:5px"><b>IMDb Votes:</b> {{ movie.imdbVotes }}</p>
             <!-- <p style="margin-bottom:5px"><b>Rotten Tomatoes Rating:</b> {{ movie_data.Ratings.1.Value }}</p> -->
-        {% endif %}
       </div>
       
       
     </div>
 
-    <div class="OndeAssitir">
+    <!-- <div class="OndeAssitir">
       {% if movie_data %}
         <h1 style="margin-right:20px">Available at:  </h1>
         {% if first_three_providers %}
@@ -118,12 +107,11 @@
   {% else %}
       <p>No movie data found.</p>
   {% endif %} -->
-  <div class="MainBoard">
+  <!-- <div class="MainBoard">
 
           {% if request.user.is_authenticated %}
           
-          <form method="post" action="/comment/{{ request.user.username }}/{{ 
-            movie_data.Title }}/">
+          <form method="post">
           {% csrf_token %}
           <input placeholder=" Add a comment" id="PesquiseAqui" name="comment" >
           <input type="submit" id="Botao">
@@ -151,3 +139,4 @@
   {% endif %}
 </body>
 </html>
+ -->

@@ -18,11 +18,11 @@
 }
 
 *{
-    margin: 0;
-    padding: 0px;
-    box-sizing: border-box;
-    font-family: Poppins;
-    color: white;
+  margin: 0;
+  padding: 0px;
+  box-sizing: border-box;
+  font-family: Poppins;
+  color: white;
 }
 
 body{
@@ -184,7 +184,7 @@ header{
 
 #ListaButoes li:hover{
     transform: scale(1.1);
-    color:#576CBC ; 
+    color: #576CBC ; 
 
 }
 #Botao{
@@ -219,10 +219,6 @@ header{
 #h1main{
     text-align: center;
 }
-#GenreSelect {
-  min-width: 350px;
-
-}
 #BotaoEdit{
     margin: 7px;
     padding: 10px 20px 10px 20px;
@@ -238,11 +234,10 @@ header{
     background-color: rgba(165, 215, 232, 0.2);
 
 }
-
-select { /* Não consegui implementar a animação de hover, e ainda tô tentando estilizar as caixas de seleção */
+#GenreSelect { /* Não consegui implementar a animação de hover, e ainda tô tentando estilizar as caixas de seleção */
   appearance: none;
   webkit-appearance: none;
-  width: 30%;
+  width: 80%;
   font-size: 25px;
   padding: 10px;
   background-color: transparent;
@@ -255,11 +250,107 @@ select { /* Não consegui implementar a animação de hover, e ainda tô tentand
   margin: auto;
 }
 
+#RatedSelect {
+  appearance: none;
+  webkit-appearance: none;
+  width: 30%;
+  padding: 5px;
+  font-size: 17px;
+  background-color: transparent;
+  border: 3px solid #576CBC;
+  border-radius: 35px;
+  color: #white;
+  cursor: pointer;
+  text-align: center;
+  display: block;
+}
+
+#GenreSelect::-webkit-scrollbar, #RatedSelect::-webkit-scrollbar {
+  margin-top: 10px;
+  background-color: transparent;
+  width: 10px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+#GenreSelect::-webkit-scrollbar-thumb, #RatedSelect::-webkit-scrollbar-thumb {
+  background-color: #0B2447;
+  border-radius: 25px;
+  width: 10px;
+  height: 10px;
+}
+
+#AdditionalFilters {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2vh;
+  cursor: pointer;
+  transition: transform 0.3s, color 0.12s;
+}
+
+#CheckBoxInput {
+  margin-top: 2.5vh;
+}
+
+.form-label {
+  margin-top: 2.5vh;
+  margin-bottom: 1vh;
+  text-align: center;
+}
+
+.form-field {
+  width: 40%;
+  padding: 2px 10px 2px 15px;
+  border: none;
+  outline: none;
+  border-radius: 25px;
+  background-color: #0B2447;
+  font-size: 15px;
+}
+
+.form-field::placeholder {
+  color: white;
+  opacity: 30%;
+  text-align: left;
+  text-size: ;
+}
+
+.field-left, .field-right {
+  width: 20%;
+  padding: 2px 10px 2px 15px;
+  border: none;
+  outline: none;
+  border-radius: 25px;
+  background-color: #0B2447;
+  font-size: 15px;
+}
+
+.field-left::placeholder, .field-right::placeholder {
+  color: white;
+  opacity: 30%;
+  text-align: left;
+}
+
+.div-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.div-inline {
+  display: inline-block;
+  flex-direction: column;
+  text-align: center;
+}
+
 .main{
   display:flex;
   margin-top:30px;
   justify-content: center;
-  flex-direction:column;
+  flex-direction: column;
 }
 
 .profile-pic-nav-container{
@@ -388,8 +479,10 @@ select { /* Não consegui implementar a animação de hover, e ainda tô tentand
 }
 
 .profile-assistidos img {
+  display: block;
   border-radius: 10px;
-  width: 100%;
+  width: min(100%, 180px);
+  height: 280px;
   object-fit: cover;
 }
 
@@ -408,27 +501,6 @@ select { /* Não consegui implementar a animação de hover, e ainda tô tentand
       cursor: pointer;
 }
 
-/* Add this to your CSS */
-.profile-assistidos-hidden::after {
-  display: block;
-  position: absolute;
-  background-color: #2d325b;
-  color: white;
-  font-size: 80%;
-  padding: 5px;
-  border-radius: 10px;
-  border: 2px solid #576CBC;
-  top: 5px; /* Adjust the position as needed */
-  left: 5px; /* Adjust the position as needed */
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* Apply the hover effect to the element */
-.profile-assistidos-hidden:hover {
-  position: relative;
-}
-
 .selecionar{
   display:flex;
   flex-direction:column;
@@ -444,10 +516,57 @@ select { /* Não consegui implementar a animação de hover, e ainda tô tentand
   margin-top:10px;
 }
 
-#GenreSelect option:hover, #GenreSelect option:focus {
-    background-color: #e91c1cr;
+.optionSelect{
+  background-color:#313866;
 }
 
-.optionSelect{
-  background-color:#313866
+.optionSelect:hover {
+  background-color: #576CBC;
+  color: white;
+}
+
+.poster{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-content:center;
+  margin:0px 10px 0px 10px;
+
+  position:relative;
+}
+.posterIMG{
+  display:block;
+  width:100%;
+}
+.posterOverlay{
+  border-radius: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0, 0, 0, 0.6);
+  color:#ffffff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  transition: opacity 0.25s;
+  text-align:center;
+  text-decoration:bold;
+}
+.posterOverlay:hover{
+  opacity:1;
+}
+.poster:hover{
+  -webkit-filter: brightness(50%);
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  -ms-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  cursor: pointer;
 }

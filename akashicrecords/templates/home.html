@@ -14,17 +14,17 @@
   <header>
     <div class="navbar">
       <div class="navbarRight">
-          <a href="/"> <img src="/static/images/Logo AKS Shadows.png" height="80px", width="80px" id="logo"></a>
+          <a href=""> <img src="/static/images/Logo AKS Shadows.png" height="80px", width="80px" id="logo"></a>
         
         <form method="post" action="/search/">
             {% csrf_token %}
-            <input type="search" placeholder="Pesquise Aqui" id="PesquiseAqui" name="search">
+            <input type="search" placeholder="Search Movies" id="PesquiseAqui" name="search">
             <button id="Botao" type="submit" style="padding-top: 5px; padding-bottom: 7px;">Search</button>
         </form>
       </div>    
       <div class="navbarLeft">
         <ul id="ListaButoes">
-            <a href="/"><span><li id="ItensListaButoes">Home</li></span></a>
+            <a href=""><span><li id="ItensListaButoes">Home</li></span></a>
             <a href="movies/" ><li id="ItensListaButoes">Movies</li></a>
         </ul>
         <div class="Login">
@@ -45,26 +45,29 @@
   </header>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const selectField = document.querySelector('#GenreSelect');
-      const link = document.querySelector('#genreLink');
+    // document.addEventListener('DOMContentLoaded', function() {
+    //   const selectField = document.querySelector('#GenreSelect');
+    //   const link = document.querySelector('#genreLink');
 
-      selectField.addEventListener('change', function() {
-        const selectedValue = selectField.value;
-        link.href = `/recommend/?genre=${selectedValue}`;
-      });
-    });
+    //   selectField.addEventListener('change', function() {
+    //     const selectedValue = selectField.value;
+    //     link.href = `/recommend/?genre=${selectedValue}`;
+    //   });
+    // });
   </script>
   
   <div class="main">
     {% if request.user.is_authenticated %}
     
      <h1 id="h1main">Welcome <span style="color:#A5D7E8 ;">{{request.user.username}}</span> !</h1>
+    <h1 id="h1main">What genre would you like to watch today?</h1><br>
+    <form action="/recommend/" id="recommend-form" method="GET">
     <div class="selecionar">
-      <div>
-        <h1 id="h1main">What genre would you like to watch today?</h1><br>
-        <select name="genre" id="GenreSelect" form="recommend_form">
+      <div style="width: 30%">
+        <select name="genre" id="GenreSelect"
+          onfocus="this.size=10;" onblur="this.size=0;" onchange="this.size=1; this.blur();">
           <option class="optionSelect" value="">Select...</option>
+          <option class="optionSelect" value="">Random</option>
           <option class="optionSelect" value="Action">Action</option>
           <option class="optionSelect" value="Adventure">Adventure</option>
           <option class="optionSelect" value="Animation">Animation</option>
@@ -90,25 +93,55 @@
         </select>
       </div>
       
-      <details>
+      <details id="AdditionalFilters">
         <summary>Additional filters</summary>
-        <form action="/recommend/" id="recommend_form">
-          <p>Minimum rating: <input type="number"></p>
-          <p>Minimum votes: <input type="number"></p>
-          
-        </form>
+          <div class="div-center">
+            <label class="form-label">Maximum Age Rating:</label>
+            <select name="rated" id="RatedSelect"
+              onfocus="this.size=7;"onblur="this.size=0;"onchange="this.size=1; this.blur()">
+              <option class="optionSelect" value="">Select...</option>
+              <option class="optionSelect" value="">Any</option>
+              <option class="optionSelect" value="G">G</option>
+              <option class="optionSelect" value="PG">PG</option>
+              <option class="optionSelect" value="PG-13">PG-13</option>
+              <option class="optionSelect" value="R">R</option>
+              <option class="optionSelect" value="">NC-17</option>
+            </select>
+            <label class="form-label">Minimum IMDb Rating:</label>
+            <input type="number" placeholder="Default: 5" name="min_rating" class="form-field" step=".1">
+            <label class="form-label">Minimum IMDb Votes:</label>
+            <input type="number" placeholder="Default: 1000" name="min_votes" class="form-field">
+          </div>
+            <label class="form-label">Release Year:</label>
+          <div class="div-inline">
+            <input type="number" placeholder="1900" name="min_year" class="field-left"> -
+            <input type="number" placeholder="2100" name="max_year" class="field-right">
+          </div>
+            <label class="form-label">Runtime (min):</label>
+          <div class="div-inline">
+            <input type="number" placeholder="0" name="min_runtime" class="field-left"> -
+            <input type="number" placeholder="1000" name="max_runtime" class="field-right">
+          </div>
+          <div class="div-center">
+            <label class="form-label">Director:</label>
+            <input type="text" placeholder="Leave Blank for Any" name="director" class="form-field">
+            <label class="form-label">Country:</label>
+            <input type="text" placeholder="Leave Blank for Any" name="country" class="form-field">
+          </div>
       </details>
-      
+      <div class="div-inline">
+        <input type="checkbox" id="CheckBoxInput" name="recommend_new">
+        <label class="form-label">Do not recommend watched movies</label>
+      </div>
       
       <div class="recomendar">
-        <a id='genreLink' href="/recommend/?genre={{ genre }}">
-          <button id="Botao">Recommend</button>
-        </a>
-        
-        
+        <!-- <a id='genreLink' href="/recommend/?genre={{ genre }}"> -->
+          <input type="submit" id="Botao" value="Recommend">
+        <!-- </a> -->
         <!-- Somente para teste -->
         <!-- The selected genre was: {{ genre }} -->
       </div>
+      </form>
       {% else %}
       <h1 id="h1main"> You're <span style="color:#A5D7E8;">not</span> logged on!!!</h1>
       {% endif %}
@@ -117,6 +150,6 @@
   
 
  </div>
-  
+<br>
 </body>
 </html>

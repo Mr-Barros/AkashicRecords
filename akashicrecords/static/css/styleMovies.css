@@ -18,12 +18,12 @@
 }
 
 *{
-    margin: 0;
-    padding: 0px;
-    box-sizing: border-box;
-    font-family: Poppins;
-    color: white;
-   scroll-behavior: smooth;
+  margin: 0;
+  padding: 0px;
+  box-sizing: border-box;
+  font-family: Poppins;
+  color: white;
+  scroll-behavior: smooth;
 }
 
 body{
@@ -204,36 +204,43 @@ header{
 
 }
 #PesquiseAqui{
-    margin-left: 200px;
-    background-color: #0B2447;
-    border: none;
-    outline: none;
-    font-size: 15px;
-    border-radius: 25px;
-    padding: 10px 10px 10px 20px;
-    width: 25vw;
+  margin-left: 200px;
+  background-color: #0B2447;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  border-radius: 25px;
+  padding: 10px 10px 10px 20px;
+  width: 25vw;
 }
 #PesquiseAqui::placeholder{
-    color: white;
-    opacity:30%;
+  color: white;
+  opacity:30%;
 }
 #h1main{
-    text-align: center;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
 }
 #BotaoEdit{
-    margin: 7px;
-    padding: 10px 20px 10px 20px;
-    border: 3px solid  #576CBC;
-    border-radius: 25px;
-    background-color: transparent;
-    font-size: 17px;
-    cursor: pointer;
-    transition: transform 0.3s, color 0.12s;
+  margin: 7px;
+  padding: 10px 20px 10px 20px;
+  border: 3px solid  #576CBC;
+  border-radius: 25px;
+  background-color: transparent;
+  font-size: 17px;
+  cursor: pointer;
+  transition: transform 0.3s, color 0.12s;
 }
 #BotaoEdit:hover{
-    transform: scale(0.94);
-    background-color: rgba(165, 215, 232, 0.2);
+  transform: scale(0.94);
+  background-color: rgba(165, 215, 232, 0.2);
+}
 
+#NotAuth {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
 }
 
 .profile-pic-nav{
@@ -258,10 +265,10 @@ header{
 }
 
 .main{
-  display:flex;
+  display: flex;
   margin-top:30px;
   align-content: center;
-  flex-direction:row;
+  flex-direction: row;
 }
 
 .selecaoGenero{
@@ -316,6 +323,20 @@ header{
   align-content:center;
   overflow-x:scroll;
   width:1100px;
+
+}
+.listFilm::-webkit-scrollbar{
+  margin-top:10px;
+  background-color:transparent;
+  width:5px;
+  border-top-right-radius:5px;
+  border-bottom-right-radius:5px;
+}
+.listFilm::-webkit-scrollbar-thumb{
+  background-color:#0B2447;
+  border-radius:25px;
+  width:5px;
+  height:10px;
 }
 
 .poster{
@@ -324,10 +345,35 @@ header{
   justify-content:center;
   align-content:center;
   margin:0px 10px 0px 10px;
-}
 
+  position:relative;
+}
+.posterIMG{
+  display:block;
+  width:100%;
+}
+.posterOverlay{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0, 0, 0, 0.6);
+  color:white;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  transition: opacity 0.25s;
+  text-align:center;
+  text-decoration:bold;
+}
+.posterOverlay:hover{
+  opacity:1.0;
+}
 .poster:hover{
-  -webkit-filter: brightness(50%);
+  -webkit-filter: brightness(90%);
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;

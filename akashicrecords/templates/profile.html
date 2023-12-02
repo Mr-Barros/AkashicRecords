@@ -27,7 +27,7 @@
       <div class="navbarLeft">
         <ul id="ListaButoes">
             <a href="/"><span><li id="ItensListaButoes">Home</li></span></a>
-            <a href="" ><li id="ItensListaButoes">Movies</li></a>
+            <a href="/movies" ><li id="ItensListaButoes">Movies</li></a>
         </ul>
         <div class="Login">
           {% if request.user.is_authenticated %}
@@ -64,7 +64,14 @@
         <p>You don't have any watched movies.</p>
       {% else %}
         {% for movie in movies %}
-          <div class="profile-assistidos"><img src={{ movie.poster }} ></div>
+          <div class="profile-assistidos">
+            <a href="/search?title={{ movie.title }}" value="search" type='submit' name='search'><img src={{ movie.poster }} ></a>
+            <a href="/search?title={{ movie.title }}">
+              <div class="posterOverlay">
+                <b>{{movie.title}}</b>
+              </div>
+            </a>
+          </div>
         {% endfor %}
       {% endif %}
     </div>

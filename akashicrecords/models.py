@@ -31,7 +31,7 @@ class Movie(models.Model):
 
 
 class Profile(models.Model):
-  user = models.OneToOneField(User, on_delete=models.CASCADE)
+  user = models.OneToOneField(User, on_delete=models.CASCADE, default='No bio yet :(')
   bio = models.TextField(max_length=500, blank=True)
   image = models.ImageField(default='default.png', upload_to='profile_images')
   watched_movies = models.ManyToManyField(Movie)
@@ -42,25 +42,26 @@ class Profile(models.Model):
 
 class Watched(models.Model):
   RATING = [
-    (0, '0'), 
-    (0.5, '0.5'),
+    (0, '0'),
     (1, '1'),
-    (1.5, '1.5'),
     (2, '2'),
-    (2.5, '2.5'),
     (3, '3'),
-    (3.5, '3.5'),
     (4, '4'),
-    (4.5, '4.5'),
     (5, '5'),
+    (6, '6'),
+    (7, '7'),
+    (8, '8'),
+    (9, '9'),
+    (10, '10'),
   ]
   
   user = models.ManyToManyField(User)
   date = models.DateTimeField(auto_now_add=True)
   rating = models.FloatField(choices=RATING)
+  movie = models.ManyToManyField(Movie)
 
 class Comment(models.Model):
-  user_comment = models.ManyToManyField(User)
+  profile = models.ManyToManyField(Profile, blank=True, null=True)
   movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
   comment = models.TextField()
   created_at = models.DateTimeField(auto_now_add=True)
