@@ -301,13 +301,14 @@ header{
   flex-direction: column;
   align-items: center;
   margin-top: 5vw;
-  margin-left: 35vw;
-  margin-right: 35vw;
+  margin-left: max(25vw,360px);
+  margin-right: max(25vw,360px);
   margin-bottom:3vw;
   background-color: #2d325b;
   padding-top: 1.5vw;
   padding-bottom: 2vw;
   padding-left: 2vw;
+  padding-right: 2vw;
   border-radius: 2.5vw;
 }
 
@@ -324,12 +325,14 @@ header{
   display: flex; 
   flex-direction: row; 
   justify-content: space-around;
+  align-items: center;
+  gap: 5px;
 }
 
 .add_watched select{
   appearance: none;
   webkit-appearance: none;
-  width: 30px;
+  width: 50px;
   height: 50px;
   padding: 5px;
   font-size: 17px;
@@ -340,8 +343,6 @@ header{
   cursor: pointer;
   text-align: center;
   display: block;
-  margin-bottom: 3vh;
-  margin-left:8px;
   margin-right:20px;
 }
 

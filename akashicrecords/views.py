@@ -6,8 +6,9 @@ import requests
 from django.conf import settings
 from django.db.models import Q
 from .models import Movie, Watched, Comment
-from .forms import UserUpdateForm, ProfileUpdateForm, AddWatched
+from .forms import UserUpdateForm, ProfileUpdateForm
 from random import randint
+import urllib3
 
 
 def home(request):
@@ -63,110 +64,105 @@ def logout_user(request):
 
 
 def search(request):
-  comments = Comment.objects.all()
-  if request.method == "POST":
-      movie_title = request.POST.get("search")
-      
-      # OMDB
-      omdb_api_key = settings.OMDB_API_KEY
-      omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie_title}"
-      omdb_response = requests.get(omdb_url)
-      movie_data = omdb_response.json()
   
-      if movie_data.get('Response') == 'False':
-        context = {
-          'movie_data': {}
-        }
-        return render(request, 'search.html', context)
-      else:
-        add_to_database(movie_data)
-
-      # TMDB
-      tmdb_api_key = settings.TMDB_API_KEY
-      tmdb_search_url = f"https://api.themoviedb.org/3/search/movie"
-      tmdb_params = {
-          'api_key': tmdb_api_key,
-          'query': movie_title
-      }
-
-      tmdb_response = requests.get(tmdb_search_url, params=tmdb_params)
-      tmdb_movie_data = tmdb_response.json()
-
-      tmdb_watch_providers_data = None
-      first_three_providers = None
-      if tmdb_movie_data.get('results'):
-
-          tmdb_movie_id = tmdb_movie_data['results'][0]['id']
-
-          # TESTE ID
-          print(f"TMDB Movie ID: {tmdb_movie_id}")
-
-          tmdb_watch_providers_url = f"https://api.themoviedb.org/3/movie/{tmdb_movie_id}/watch/providers"
-          tmdb_providers_params = {
-              'api_key': tmdb_api_key
-          }
-          tmdb_providers_response = requests.get(tmdb_watch_providers_url, params=tmdb_providers_params)
-          tmdb_watch_providers_data = tmdb_providers_response.json()
-
-          providers = tmdb_watch_providers_data.get('results', {}).get('BR', {}).get('flatrate', [])
-          first_three_providers = providers[:3] if providers else []
-        #TESTE ONDE ASSITIR
-          #print(first_three_providers)
-
-    
-      context = {'movie_data': movie_data, 'first_three_providers': first_three_providers, 'comments': comments}
-      return render(request, 'search.html', context)
+  if request.method == "POST":
+    movie_title = request.POST.get("search")
   elif request.method == "GET":
     movie_title = request.GET.get("title")
+      
     # OMDB
-    omdb_api_key = settings.OMDB_API_KEY
-    omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie_title}"
-    omdb_response = requests.get(omdb_url)
-    movie_data = omdb_response.json()
+  omdb_api_key = settings.OMDB_API_KEY
+  omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie_title}"
+  omdb_response = requests.get(omdb_url)
+  movie_data = omdb_response.json()
 
-    if movie_data.get('Response') == 'False':
-      context = {
-        'movie_data': {}
-      }
-      return render(request, 'search.html', context)
-    else:
-      add_to_database(movie_data)
-
-    # TMDB
-    tmdb_api_key = settings.TMDB_API_KEY
-    tmdb_search_url = f"https://api.themoviedb.org/3/search/movie"
-    tmdb_params = {
-        'api_key': tmdb_api_key,
-        'query': movie_title
+  if movie_data.get('Response') == 'False':
+    context = {
+      'movie_data': {}
     }
-
-    tmdb_response = requests.get(tmdb_search_url, params=tmdb_params)
-    tmdb_movie_data = tmdb_response.json()
-
-    tmdb_watch_providers_data = None
-    if tmdb_movie_data.get('results'):
-
-        tmdb_movie_id = tmdb_movie_data['results'][0]['id']
-
-        # TESTE ID
-        print(f"TMDB Movie ID: {tmdb_movie_id}")
-
-        tmdb_watch_providers_url = f"https://api.themoviedb.org/3/movie/{tmdb_movie_id}/watch/providers"
-        tmdb_providers_params = {
-            'api_key': tmdb_api_key
-        }
-        tmdb_providers_response = requests.get(tmdb_watch_providers_url, params=tmdb_providers_params)
-        tmdb_watch_providers_data = tmdb_providers_response.json()
-
-        providers = tmdb_watch_providers_data.get('results', {}).get('BR', {}).get('flatrate', [])
-        first_three_providers = providers[:3] if providers else []
-      #TESTE ONDE ASSITIR
-        #print(first_three_providers)
-
-
-    context = {'movie_data': movie_data, 'first_three_providers': first_three_providers, 'comments': comments}
     return render(request, 'search.html', context)
-  return render(request, 'search.html', context={'comments': comments})
+  else:
+    add_to_database(movie_data)
+    
+  comments = Comment.objects.filter(movie=Movie.objects.filter(title = movie_title).first()).all()
+  
+  watched = Watched.objects.filter(user=request.user, movie__title=movie_title).first()
+  if watched:
+      rating = watched.rating
+  else:
+    rating = None
+
+  # TMDB
+  tmdb_api_key = settings.TMDB_API_KEY
+  tmdb_search_url = f"https://api.themoviedb.org/3/search/movie"
+  tmdb_params = {
+      'api_key': tmdb_api_key,
+      'query': movie_title
+  }
+
+  tmdb_response = requests.get(tmdb_search_url, params=tmdb_params)
+  tmdb_movie_data = tmdb_response.json()
+
+  tmdb_watch_providers_data = None
+  first_three_providers = None
+  if tmdb_movie_data.get('results'):
+      tmdb_movie_id = tmdb_movie_data['results'][0]['id']
+      tmdb_watch_providers_url = f"https://api.themoviedb.org/3/movie/{tmdb_movie_id}/watch/providers"
+      tmdb_providers_params = {
+          'api_key': tmdb_api_key
+      }
+      tmdb_providers_response = requests.get(tmdb_watch_providers_url, params=tmdb_providers_params)
+      tmdb_watch_providers_data = tmdb_providers_response.json()
+
+      providers = tmdb_watch_providers_data.get('results', {}).get('BR', {}).get('flatrate', [])
+      first_three_providers = providers[:3] if providers else []
+  context = {'movie_data': movie_data, 'first_three_providers': first_three_providers, 'comments': comments, 'watched' : watched, 'rating' : rating}
+  return render(request, 'search.html', context)
+  
+    # comments = Comment.objects.filter(movie=Movie.objects.filter(title = movie_title).first()).all()
+    # # OMDB
+    # omdb_api_key = settings.OMDB_API_KEY
+    # omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie_title}"
+    # omdb_response = requests.get(omdb_url)
+    # movie_data = omdb_response.json()
+
+    # if movie_data.get('Response') == 'False':
+    #   context = {
+    #     'movie_data': {}
+    #   }
+    #   return render(request, 'search.html', context)
+    # else:
+    #   add_to_database(movie_data)
+
+    # # TMDB
+    # tmdb_api_key = settings.TMDB_API_KEY
+    # tmdb_search_url = f"https://api.themoviedb.org/3/search/movie"
+    # tmdb_params = {
+    #     'api_key': tmdb_api_key,
+    #     'query': movie_title
+    # }
+
+    # tmdb_response = requests.get(tmdb_search_url, params=tmdb_params)
+    # tmdb_movie_data = tmdb_response.json()
+
+    # tmdb_watch_providers_data = None
+    # if tmdb_movie_data.get('results'):
+
+    #     tmdb_movie_id = tmdb_movie_data['results'][0]['id']
+
+    #     tmdb_watch_providers_url = f"https://api.themoviedb.org/3/movie/{tmdb_movie_id}/watch/providers"
+    #     tmdb_providers_params = {
+    #         'api_key': tmdb_api_key
+    #     }
+    #     tmdb_providers_response = requests.get(tmdb_watch_providers_url, params=tmdb_providers_params)
+    #     tmdb_watch_providers_data = tmdb_providers_response.json()
+
+    #     providers = tmdb_watch_providers_data.get('results', {}).get('BR', {}).get('flatrate', [])
+    #     first_three_providers = providers[:3] if providers else []
+
+    # context = {'movie_data': movie_data, 'first_three_providers': first_three_providers, 'comments': comments}
+    # return render(request, 'search.html', context)
+  return render(request, 'search.html', context={'comments': comments, 'watched' : watched, 'rating' : rating})
   return redirect("home")
 
 def db_search(request, movie_id):
@@ -179,7 +175,12 @@ def profile_page(request, username):
   u_form = UserUpdateForm()
   p_form = ProfileUpdateForm()
   movies = profile.profile.watched_movies.all()
-  return render(request, 'profile.html', {'profile': profile, 'u_form' : u_form, 'p_form' : p_form, 'movies': movies})
+  watched = Watched.objects.filter(user=profile).all()
+  # ratings = []
+  # for m in movies:
+  #   w = Watched.objects.filter(movie=m).first()
+  #   ratings.append(w.rating)
+  return render(request, 'profile.html', {'profile': profile, 'u_form' : u_form, 'p_form' : p_form, 'movies': movies, 'watched' : watched})
 
 @login_required
 def update_profile_page(request, username):
@@ -202,10 +203,12 @@ def add_watched_movie(request, username, movie_id):
   id = int(movie_id[2:])
   user = User.objects.filter(username=request.user.__str__()).first()
   movie = Movie.objects.filter(id=id).first()
-  form = AddWatched(instance=movie)
   if request.method == 'GET':
-    return render(request, 'add_watched.html', context={"movie": movie, "user":user, "form":form})
+    return render(request, 'add_watched.html', context={"movie": movie, "user":user, })
   if request.method == 'POST' and movie:
+    rate = int(request.POST['rating'])
+    w = Watched.objects.create(rating=rate, movie=movie)
+    w.user.add(user)
     user.profile.watched_movies.add(movie)
     user.save()
     return redirect(f"/profile/{username}/")
@@ -251,17 +254,39 @@ def recommendation(request):
   movies = Movie.objects.filter(query)
   if recommend_new:
     movies = movies.exclude(id__in=watched)
-
   movie_amount = movies.count()
   if (movie_amount > 0):
     index = randint(0, movie_amount - 1)
     movie = movies[index]
+    
     # Pesquisa na API
     omdb_api_key = settings.OMDB_API_KEY
     omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
     omdb_response = requests.get(omdb_url)
     movie_data = omdb_response.json()
-    context = {'movie_data': movie_data}
+    
+    # TMDB
+    tmdb_api_key = settings.TMDB_API_KEY
+    tmdb_search_url = f"https://api.themoviedb.org/3/search/movie"
+    tmdb_params = {
+        'api_key': tmdb_api_key,
+        'query': movie.title,
+    }
+    tmdb_response = requests.get(tmdb_search_url, params=tmdb_params)
+    tmdb_movie_data = tmdb_response.json()
+    tmdb_watch_providers_data = None
+    if tmdb_movie_data.get('results'):
+        tmdb_movie_id = tmdb_movie_data['results'][0]['id']
+        tmdb_watch_providers_url = f"https://api.themoviedb.org/3/movie/{tmdb_movie_id}/watch/providers"
+        tmdb_providers_params = {
+            'api_key': tmdb_api_key
+        }
+        tmdb_providers_response = requests.get(tmdb_watch_providers_url, params=tmdb_providers_params)
+        tmdb_watch_providers_data = tmdb_providers_response.json()
+        providers = tmdb_watch_providers_data.get('results', {}).get('BR', {}).get('flatrate', [])
+        first_three_providers = providers[:3] if providers else []
+    comments = Comment.objects.filter(movie=movie)
+    context = {'movie_data': movie_data, 'first_three_providers': first_three_providers, 'comments': comments}
     return render(request, 'search.html', context)
   else:
     movie_data = {}
@@ -357,6 +382,7 @@ def add_to_database(movie_data):
   return
 
 def movies(request):
+
   tmdb_api_key = settings.TMDB_API_KEY
   tmdb_popular_url = f"https://api.themoviedb.org/3/movie/popular"
   tmdb_top_rated_url = f"https://api.themoviedb.org/3/movie/top_rated"
@@ -397,72 +423,77 @@ def movies(request):
   action_movies = Movie.objects.filter(genre__icontains='Action').order_by('?')[:20]
   action_movies_data = []
   for movie in action_movies:
-      # omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
-      # omdb_response = requests.get(omdb_url)
-      # omdb_data = omdb_response.json()
-      # poster_url = omdb_data.get('Poster')
-      poster_url = movie.poster
-      if poster_url and poster_url!="N/A":
-        response_poster = requests.get(poster_url)
-        if response_poster.status_code == 200:
-          action_movies_data.append({'title': movie.title, 'url': poster_url})
+      omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
+      omdb_response = requests.get(omdb_url)
+      omdb_data = omdb_response.json()
+      poster_url = omdb_data.get('Poster')
+      # poster_url = movie.poster
+      # if poster_url and poster_url!="N/A":
+      #   response_poster = requests.get(poster_url, verify=False)
+      #   if response_poster.status_code == 200:
+      #     action_movies_data.append({'title': movie.title, 'url': poster_url})
+      action_movies_data.append({'title': movie.title, 'url': poster_url})
 
 
   #ADVENTURE
   adventure_movies = Movie.objects.filter(genre__icontains='Adventure').order_by('?')[:20]
   adventure_movies_data = []
   for movie in adventure_movies:
-      # omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
-      # omdb_response = requests.get(omdb_url)
-      # omdb_data = omdb_response.json()
-      # poster_url = omdb_data.get('Poster')
-      poster_url = movie.poster
-      if poster_url and poster_url!="N/A":
-        response_poster = requests.get(poster_url)
-        if response_poster.status_code == 200:
-          adventure_movies_data.append({'title': movie.title, 'url': poster_url})
+      omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
+      omdb_response = requests.get(omdb_url)
+      omdb_data = omdb_response.json()
+      poster_url = omdb_data.get('Poster')
+      # poster_url = movie.poster
+      # if poster_url and poster_url!="N/A":
+      #   response_poster = requests.get(poster_url, verify=False)
+      #   if response_poster.status_code == 200:
+      #     adventure_movies_data.append({'title': movie.title, 'url': poster_url})
+      adventure_movies_data.append({'title': movie.title, 'url': poster_url})
 
   #COMEDY
   comedy_movies = Movie.objects.filter(genre__icontains='Comedy').order_by('?')[:20]
   comedy_movies_data = []
   for movie in comedy_movies:
-      # omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
-      # omdb_response = requests.get(omdb_url)
-      # omdb_data = omdb_response.json()
-      # poster_url = omdb_data.get('Poster')
-      poster_url = movie.poster
-      if poster_url and poster_url!="N/A":
-        response_poster = requests.get(poster_url)
-        if response_poster.status_code == 200:
-          comedy_movies_data.append({'title': movie.title, 'url': poster_url})
+      omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
+      omdb_response = requests.get(omdb_url)
+      omdb_data = omdb_response.json()
+      poster_url = omdb_data.get('Poster')
+      # poster_url = movie.poster
+      # if poster_url and poster_url!="N/A":
+      #   response_poster = requests.get(poster_url, verify=False)
+      #   if response_poster.status_code == 200:
+      #     comedy_movies_data.append({'title': movie.title, 'url': poster_url})
+      comedy_movies_data.append({'title': movie.title, 'url': poster_url})
 
   #DRAMA
   drama_movies = Movie.objects.filter(genre__icontains='Drama').order_by('?')[:20]
   drama_movies_data = []
   for movie in drama_movies:
-      # omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
-      # omdb_response = requests.get(omdb_url)
-      # omdb_data = omdb_response.json()
-      # poster_url = omdb_data.get('Poster')
-      poster_url = movie.poster
-      if poster_url and poster_url!="N/A":
-        response_poster = requests.get(poster_url)
-        if response_poster.status_code == 200:
-          drama_movies_data.append({'title': movie.title, 'url': poster_url})
+      omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
+      omdb_response = requests.get(omdb_url)
+      omdb_data = omdb_response.json()
+      poster_url = omdb_data.get('Poster')
+      # poster_url = movie.poster
+      # if poster_url and poster_url!="N/A":
+      #   response_poster = requests.get(poster_url, verify=False)
+      #   if response_poster.status_code == 200:
+      #     drama_movies_data.append({'title': movie.title, 'url': poster_url})
+      drama_movies_data.append({'title': movie.title, 'url': poster_url})
 
   #HORROR
   horror_movies = Movie.objects.filter(genre__icontains='Horror').order_by('?')[:20]
   horror_movies_data = []
   for movie in horror_movies:
-      # omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
-      # omdb_response = requests.get(omdb_url)
-      # omdb_data = omdb_response.json()
-      # poster_url = omdb_data.get('Poster')
-      poster_url = movie.poster
-      if poster_url and poster_url!="N/A":
-        response_poster = requests.get(poster_url)
-        if response_poster.status_code == 200:
-          horror_movies_data.append({'title': movie.title, 'url': poster_url})
+      omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
+      omdb_response = requests.get(omdb_url)
+      omdb_data = omdb_response.json()
+      poster_url = omdb_data.get('Poster')
+      # poster_url = movie.poster
+      # if poster_url and poster_url!="N/A":
+      #   response_poster = requests.get(poster_url, verify=False)
+      #   if response_poster.status_code == 200:
+      #     horror_movies_data.append({'title': movie.title, 'url': poster_url})
+      horror_movies_data.append({'title': movie.title, 'url': poster_url})
 
   #Sci-Fi
   Sci_Fi_movies = Movie.objects.filter(genre__icontains='Sci-Fi').order_by('?')[:20]
@@ -473,52 +504,56 @@ def movies(request):
       omdb_data = omdb_response.json()
       poster_url = omdb_data.get('Poster')
       # poster_url = movie.poster
-      if poster_url and poster_url!="N/A":
-        response_poster = requests.get(poster_url)
-        if response_poster.status_code == 200:
-          Sci_Fi_movies_data.append({'title': movie.title, 'url': poster_url})
+      # if poster_url and poster_url!="N/A":
+      #   response_poster = requests.get(poster_url, verify=False)
+      #   if response_poster.status_code == 200:
+      #     Sci_Fi_movies_data.append({'title': movie.title, 'url': poster_url})
+      Sci_Fi_movies_data.append({'title': movie.title, 'url': poster_url})
 
   #ROMANCE
   Romance_movies = Movie.objects.filter(genre__icontains='Romance').order_by('?')[:20]
   Romance_movies_data = []
   for movie in Romance_movies:
-      # omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
-      # omdb_response = requests.get(omdb_url)
-      # omdb_data = omdb_response.json()
-      # poster_url = omdb_data.get('Poster')
-      poster_url = movie.poster
-      if poster_url and poster_url!="N/A":
-        response_poster = requests.get(poster_url)
-        if response_poster.status_code == 200:
-          Romance_movies_data.append({'title': movie.title, 'url': poster_url})
+      omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
+      omdb_response = requests.get(omdb_url)
+      omdb_data = omdb_response.json()
+      poster_url = omdb_data.get('Poster')
+      # poster_url = movie.poster
+      # if poster_url and poster_url!="N/A":
+      #   response_poster = requests.get(poster_url, verify=False)
+      #   if response_poster.status_code == 200:
+      #     Romance_movies_data.append({'title': movie.title, 'url': poster_url})
+      Romance_movies_data.append({'title': movie.title, 'url': poster_url})
 
   #DOCUMENTARY
   Documentary_movies = Movie.objects.filter(genre__icontains='Documentary').order_by('?')[:20]
   Documentary_movies_data = []
   for movie in Documentary_movies:
-      # omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
-      # omdb_response = requests.get(omdb_url)
-      # omdb_data = omdb_response.json()
-      # poster_url = omdb_data.get('Poster')
-      poster_url = movie.poster
+      omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
+      omdb_response = requests.get(omdb_url)
+      omdb_data = omdb_response.json()
+      poster_url = omdb_data.get('Poster')
+      # poster_url = movie.poster
       if poster_url and poster_url!="N/A":
-        response_poster = requests.get(poster_url)
+        response_poster = requests.get(poster_url, verify=False)
         if response_poster.status_code == 200:
           Documentary_movies_data.append({'title': movie.title, 'url': poster_url})
+      # Documentary_movies_data.append({'title': movie.title, 'url': poster_url})
 
   #MUSIC
   Music_movies = Movie.objects.filter(genre__icontains='Music').order_by('?')[:20]
   Music_movies_data = []
   for movie in Music_movies:
-      # omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
-      # omdb_response = requests.get(omdb_url)
-      # omdb_data = omdb_response.json()
-      # poster_url = omdb_data.get('Poster')
-      poster_url = movie.poster
+      omdb_url = f"http://www.omdbapi.com/?apikey={omdb_api_key}&t={movie.title}"
+      omdb_response = requests.get(omdb_url)
+      omdb_data = omdb_response.json()
+      poster_url = omdb_data.get('Poster')
+      # poster_url = movie.poster
       if poster_url and poster_url!="N/A":
-        response_poster = requests.get(poster_url)
+        response_poster = requests.get(poster_url, verify=False)
         if response_poster.status_code == 200:
           Music_movies_data.append({'title': movie.title, 'url': poster_url})
+      # Music_movies_data.append({'title': movie.title, 'url': poster_url})
 
   
   context = {
@@ -589,14 +624,12 @@ def movies2(request):
 def comments(request, username, movie_title):
   profile = User.objects.filter(username=username).first().profile
   movie = Movie.objects.filter(title=movie_title).first()
-
-  print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-  
   if request.method == 'POST':
     comment = Comment.objects.create(
       comment = request.POST["comment"],
       movie = movie,
       )
+    comment.profile.clear()
     comment.profile.add(profile)
     comment.save()
     return redirect(f"/search?title={movie.title}")

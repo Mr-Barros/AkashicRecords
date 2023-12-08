@@ -20,7 +20,7 @@
 
         <form method="post" action="/search/">
             {% csrf_token %}
-            <input type="search" placeholder="Pesquise Aqui" id="PesquiseAqui" name="search">
+            <input type="search" placeholder="Search Movies" id="PesquiseAqui" name="search">
             <button id="Botao" type="submit" style="padding-top: 5px; padding-bottom: 7px;">Search</button>
         </form>
       </div>    
@@ -40,7 +40,7 @@
       </div>  
     </div>
   </header>
-
+  
   <div class="profile-info-container">
     <div class="profile-info-box">
       <div class="profile-info">
@@ -60,19 +60,71 @@
 
   <div class="profile-assistidos-container">
     <div class="profile-assistidos-content">
-      {% if movie %}
-        <p>You don't have any watched movies.</p>
-      {% else %}
-        {% for movie in movies %}
+      {% if watched %}
+        {% for w in watched %}
           <div class="profile-assistidos">
-            <a href="/search?title={{ movie.title }}" value="search" type='submit' name='search'><img src={{ movie.poster }} ></a>
-            <a href="/search?title={{ movie.title }}">
+            <a href="/search?title={{ w.movie.title }}" value="search" type='submit' name='search'><img src={{ w.movie.poster }} class='profile-assistidos-img' ></a>
+            <a href="/search?title={{ w.movie.title }}">
               <div class="posterOverlay">
-                <b>{{movie.title}}</b>
+                <b>{{w.movie.title}}</b>
               </div>
             </a>
+            <div class="star-container">
+            {% if w.rating == 1 %}
+              <img src="{% static 'images/half_star.svg' %}" class='star'>
+            {% endif %}
+            {% if w.rating == 2 %}
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+            {% endif %}
+            {% if w.rating == 3 %}
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+              <img src="{% static 'images/half_star.svg' %}" class='star'>
+            {% endif %}
+            {% if w.rating == 4 %}
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+            {% endif %}
+            {% if w.rating == 5 %}
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+              <img src="{% static 'images/half_star.svg' %}" class='star'>
+            {% endif %}
+            {% if w.rating == 6 %}
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+            {% endif %}
+            {% if w.rating == 7 %}
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+              <img src="{% static 'images/half_star.svg' %}" class='star'>
+            {% endif %}
+            {% if w.rating == 8 %}
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+            {% endif %}
+            {% if w.rating == 9 %}
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+              <img src="{% static 'images/half_star.svg' %}" class='star'>
+            {% endif %}
+            {% if w.rating == 10 %}
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+              <img src="{% static 'images/full_star.svg' %}" class='star'>
+            {% endif %}
+            </div>  
           </div>
         {% endfor %}
+      {% else %}
+        <p>You don't have any watched movies.</p>
       {% endif %}
     </div>
   </div>

@@ -62,10 +62,21 @@
     <!-- </div> -->
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
-      <div style="display:flex; flex-direction:column; align-items: center; justify-content: center; padding-top: 30px;">
+      <div style="display:flex; flex-direction:column; align-items: center; justify-content: center; padding-top: 30px; gap:20px">
         <div class="add_watched">
           <p style='font-size:150%;'><b>Rating:</b></p>
-          {{ form.rating }}
+          <select name='rating' id="numbers">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
         </div>
         <button type="submit" id="Botao" style="margin-top: 20px;"><b>Add</b></button>
       </div>
