@@ -1,30 +1,15 @@
-# Python on Replit
+# [Akashic Records](https://akashicrecords.davimartignoni.repl.co/) 
 
-This is a template to get you started with Python on Replit. It's ready to go so you can just hit run and start coding!
+Projeto desenvolvido no semestre de 2023.2 por alunos de segundo período de Engenharia da Computação como parte da disciplina Projeto Integrado - Software, na PUC-Rio. O objetivo do site é servir como um auxílio para usuários de serviços de streaming, exibindo várias informações sobre uma grande quantidade de filmes, indicando os serviços de streaming nos quais cada filme está disponível e oferecendo sugestões que podem ser ajustadas aos gostos do usuário. O site também possui outras funcionalidades, como uma página de navegação de filmes, uma biblioteca de filmes assistidos, avaliações e comentários.
 
-## Running the repl
+O projeto foi desenvolvido com o uso do framework Django, sendo utilizadas as linguagens Python para o back-end, e HTML e CSS para o front-end. O Replit foi utilizado como o ambiente de desenvolvimento. Atualmente o site está disponível no domínio [https://akashicrecords.davimartignoni.repl.co/](https://akashicrecords.davimartignoni.repl.co/). Para mais detalhes sobre o desenvolvimento, ver Relatório Akashic Records.
 
-1. Setup a new secret environment variable (the lock icon) where the key is `SECRET_KEY` and the value is
-   a randomly generated token of 32 bits of randomnese. To generate such a token type this into the shell and hit Enter:
-```
-python
-import secrets
-secrets.token_urlsafe(32)
-```
-2. Hit run!
+Este repositório serve para que o site fique público e novas funcionalidades e melhorias sejam adicionadas gradualmente. Sugestões de melhorias e adições ao código são bem vindas.
 
-See this 1 minute video for a walkthrough: [https://www.loom.com/share/ecc4e738149f4d1db3bcff01758b3e71](https://www.loom.com/share/341b5574d12040fb9fcbbff150777f1c)
+## Integrantes
 
-## Installing packages
-
-To add packages to your repl, you can just import directly in the file you want to use the package in, and it will automatically be installed when you press the run button. Like below:
-```python
-import math
-import pandas as pd
-```
-
-You could also install packages by using the Replit packager interface in the left sidebar.
-
-## Help
-
-If you need help you might be able to find an answer on our [docs](https://docs.replit.com) page. Feel free to report bugs and give us feedback [here](https://replit.com/support).
+Davi Barros  
+Diego Fonseca  
+Pedro Nogueira  
+Tiago Villela  
+Victor Picorelli  
